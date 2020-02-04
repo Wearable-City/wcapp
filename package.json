@@ -12,7 +12,7 @@
     },
     "scripts": {
         "start": "react-scripts start",
-        "build": "react-scripts build && go get ./functions/... && go build ./functions/hello.go",
+        "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
