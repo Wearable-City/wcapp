@@ -10,7 +10,7 @@ const client = new faunadb.Client({
 /* export our lambda function as named "handler" export */
 exports.handler = (event, context, callback) => {
     /* parse the string body into a useable JS object */
-    const data = JSON.parse(event.body);
+    const data = event.body;
     console.log("Function `users-edit-data` invoked", data);
     const updatedData = {
         data: data
