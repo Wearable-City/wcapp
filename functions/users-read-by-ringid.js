@@ -7,6 +7,7 @@ const client = new faunadb.Client({
 
 exports.handler = (event, context, callback) => {
     console.log("Function `users-read-by-ringid` invoked");
+    console.log(event["queryStringParameters"]["user"]);
     return client
         .query(
             q.Paginate(
