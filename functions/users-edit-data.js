@@ -20,7 +20,9 @@ exports.handler = (event, context, callback) => {
         .query(
             q.Update(
                 q.Ref(q.Collection("users"), event["queryStringParameters"]["fid"]),
-                updatedData
+                {
+                    data: { tags: ["pet", "cute"] }
+                }
             )
         )
         .then(response => {
