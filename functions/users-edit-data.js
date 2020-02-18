@@ -10,14 +10,15 @@ const client = new faunadb.Client({
 /* export our lambda function as named "handler" export */
 exports.handler = (event, context, callback) => {
     /* parse the string body into a useable JS object */
-    console.log("Function `users-edit-data` invoked", event.body);
+    let data = JSON.parse(event.body);
+    console.log("Function `users-edit-data` invoked", data);
     /* construct the fauna query */
     return client
         .query(
             q.Update(
                 q.Ref(q.Collection("users"), event["queryStringParameters"]["fid"]),
                 {
-                    data: event.body
+                    data: data
                 }
             )
         )
