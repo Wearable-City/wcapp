@@ -12,7 +12,7 @@ exports.handler = (event, context, callback) => {
         .query(
             q.Paginate(
                 q.Match(
-                    q.Index("indexes/users_by_ringID"),
+                    q.Index("users_by_ringID"),
                     event["queryStringParameters"]["user"]
                 )
             )
