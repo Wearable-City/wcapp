@@ -18,8 +18,13 @@ exports.handler = (event, context, callback) => {
     /* construct the fauna query */
     return client
         .query(
-            q.Update(q.Collection("users"), event["queryStringParameters"]["fid"]),
-            updatedData
+            q.Update(
+                q.Ref(
+                    q.Collection("users"),
+                    event["queryStringParameters"]["fid"],
+                    updatedData
+                )
+            )
         )
         .then(response => {
             console.log("success", response);
