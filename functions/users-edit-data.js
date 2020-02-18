@@ -19,11 +19,8 @@ exports.handler = (event, context, callback) => {
     return client
         .query(
             q.Update(
-                q.Ref(
-                    q.Collection("users"),
-                    event["queryStringParameters"]["fid"],
-                    updatedData
-                )
+                q.Ref(q.Collection("users"), event["queryStringParameters"]["fid"]),
+                updatedData
             )
         )
         .then(response => {
