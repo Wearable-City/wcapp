@@ -18,7 +18,8 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "bootstrap": "node ./scripts/bootstrap-fauna-database.js"
+        "bootstrap": "node ./scripts/bootstrap-fauna-database.js",
+        "serve-static": "npx http-server build"
     },
     "eslintConfig": {
         "extends": "react-app"
