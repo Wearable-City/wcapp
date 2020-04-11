@@ -4,7 +4,7 @@ const faunadb = require("faunadb"); /* Import faunaDB sdk */
 /* configure faunaDB Client with our secret */
 const q = faunadb.query;
 const client = new faunadb.Client({
-    secret: process.env.FAUNADB_SERVER_SECRET
+    secret: process.env.FAUNADB_SERVER_SECRET,
 });
 
 /* export our lambda function as named "handler" export */
@@ -16,26 +16,27 @@ exports.handler = (event, context, callback) => {
     return client
         .query(
             q.Update(
-                q.Ref(q.Collection("users"), event["queryStringParameters"]["fid"]),
+                q.Ref(q.Collection("users"), event["queryStringParameters"]["ref"]),
                 {
-                    data: data
+                    data: data,
                 }
             )
         )
-        .then(response => {
+        .then((response) => {
             console.log("success", response);
             /* Success! return the response with statusCode 200 */
             return callback(null, {
                 statusCode: 200,
-                body: JSON.stringify(response)
+                body: JSON.stringify(response),
+                headers: { "Access-Control-Allow-Origin": "*" },
             });
         })
-        .catch(error => {
+        .catch((error) => {
             console.log("error", error);
             /* Error! return the error with statusCode 400 */
             return callback(null, {
                 statusCode: 400,
-                body: JSON.stringify(error)
+                body: JSON.stringify(error),
             });
         });
 };
