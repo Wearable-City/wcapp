@@ -149,7 +149,7 @@ Our app, specifically in `ContactList`, will get a `user` object from the API, l
 
     ```JSON
     {
-        "contacts" [
+        "contacts": [
             {
                 "id": "ecdbb7e3-5df7-444c-abdc-f3896d245dae",
                 "firstName": "New",
