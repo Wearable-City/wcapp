@@ -8,12 +8,17 @@ import {
     Tag,
     Spin,
     message,
+    Button,
 } from "antd";
 import "antd/dist/antd.css";
 // import '../App.css';
 
 const { Title } = Typography;
 const Search = Input.Search;
+
+const UPDATE_URL = new URL(
+    "https://wearablecity.netlify.com/.netlify/functions/users-edit-data"
+);
 
 const deleteNotification = (contact_id) => {
     message.warning("Contact, " + contact_id + " has been deleted");
@@ -34,13 +39,8 @@ class ContactList extends React.Component {
         this.state = {
             output: undefined,
             data: undefined,
-            ringId: undefined,
-            userName: undefined,
-            firstName: undefined,
-            lastName: undefined,
-            password: undefined,
-            contacts: undefined,
-
+            ref: undefined,
+            user: undefined,
             loaded: false,
             isEditing: false,
         };
@@ -77,14 +77,16 @@ class ContactList extends React.Component {
                         title="Sure to delete?"
                         okType="danger"
                         onConfirm={() => {
-                            console.log(this.state.contacts);
+                            console.log(this.state.user.contacts);
                             console.log(text);
                             console.log(record);
                             console.log(index);
                             this.setState({
-                                contacts: this.state.contacts.filter(
-                                    (e) => e.firstName !== record.firstName
-                                ),
+                                user: {
+                                    contacts: this.state.user.contacts.filter(
+                                        (e) => e.id !== record.id
+                                    ),
+                                },
                             });
                         }}
                     >
@@ -111,24 +113,39 @@ class ContactList extends React.Component {
                 this.setState({
                     output: output,
                     data: output[0].data,
-                    ringId: output[0].data.ringId,
-                    userName: output[0].data.userName,
-                    firstName: output[0].data.firstName,
-                    lastName: output[0].data.lastName,
-                    password: output[0].data.password,
-                    contacts: output[0].data.contacts,
+                    // ringId: output[0].data.ringId,
+                    // userName: output[0].data.userName,
+                    // firstName: output[0].data.firstName,
+                    // lastName: output[0].data.lastName,
+                    // password: output[0].data.password,
+                    // contacts: output[0].data.contacts,
+                    user: output[0].data,
+                    ref: output[0].ref["@ref"].id,
                     loaded: true,
                 })
             );
     };
 
-    componentDidMount() {
+    syncData = () => {
+        UPDATE_URL.searchParams.set("ref", this.state.output);
+        fetch(UPDATE_URL.href, {
+            mode: "cors",
+            body: JSON.stringify(this.state.user),
+            method: "POST",
+        }).catch((e) => console.error(e));
+    };
+
+    componentDidMount = () => {
         console.log("componentDidMount");
         this.fetchData();
-    }
+    };
 
     handleSelect = (contact_id) => {
         this.setState({ selectContact: contact_id });
+    };
+
+    componentDidUpdate = () => {
+        console.log(this.state);
     };
 
     render() {
@@ -151,8 +168,11 @@ class ContactList extends React.Component {
                 <Table
                     columns={this.columns}
                     loading={!this.state.loaded}
-                    dataSource={this.state.contacts}
+                    dataSource={!this.state.loaded ? [] : this.state.user.contacts}
                 />
+                <Button type="primary" onClick={this.syncData}>
+                    Save
+                </Button>
             </div>
         );
     }
