@@ -194,7 +194,7 @@ class ContactList extends React.Component {
     };
 
     syncData = () => {
-        UPDATE_URL.searchParams.set("ref", this.state.output);
+        UPDATE_URL.searchParams.set("ref", this.state.ref);
         fetch(UPDATE_URL.href, {
             mode: "cors",
             body: JSON.stringify(this.state.user),
