@@ -16,7 +16,7 @@ const { Title } = Typography;
 const Search = Input.Search;
 
 const deleteNotification = (contact_id) => {
-    message.warning('Contact, ' + contact_id + ' has been deleted');
+    message.warning("Contact, " + contact_id + " has been deleted");
 };
 
 // const editNotification = (contact_id) => {
@@ -41,13 +41,8 @@ class ContactList extends React.Component {
             password: undefined,
             contacts: undefined,
 
-
-
-
             loaded: false,
             isEditing: false,
-
-
         };
 
         this.columns = [
@@ -74,15 +69,29 @@ class ContactList extends React.Component {
                 key: "contact_id",
             },
             {
-                title: 'operation',
-                dataIndex: 'operation',
-                fixed: 'right',
-                render: (contact) => (
-                    <Popconfirm title="Sure to delete?" okType='danger' onConfirm={() => this.onDelete(contact.contact_id)}>
+                title: "operation",
+                dataIndex: "operation",
+                fixed: "right",
+                render: (text, record, index) => (
+                    <Popconfirm
+                        title="Sure to delete?"
+                        okType="danger"
+                        onConfirm={() => {
+                            console.log(this.state.contacts);
+                            console.log(text);
+                            console.log(record);
+                            console.log(index);
+                            this.setState({
+                                contacts: this.state.contacts.filter(
+                                    (e) => e.firstName !== record.firstName
+                                ),
+                            });
+                        }}
+                    >
                         <a href="javascript:;">Delete</a>
                     </Popconfirm>
-                )
-            }
+                ),
+            },
         ];
 
         this.onDelete = this.onDelete.bind(this);
@@ -90,7 +99,7 @@ class ContactList extends React.Component {
 
     onDelete = (contact_id) => {
         deleteNotification(contact_id);
-    }
+    };
 
     fetchData = () => {
         fetch(
@@ -123,7 +132,6 @@ class ContactList extends React.Component {
     };
 
     render() {
-
         return (
             <div>
                 <div>
@@ -148,16 +156,15 @@ class ContactList extends React.Component {
             </div>
         );
     }
-
 }
 
 export default ContactList;
 
-        // if (!this.state.loaded) {
-        //     for (let i = 0; i < this.state.contacts.length; i++) {
-        //         this.state.contactsOnDisplay.push(this.state.contacts[i]);
-        //         this.state.contacts.push(this.state.contacts[i])
-        //     }
+// if (!this.state.loaded) {
+//     for (let i = 0; i < this.state.contacts.length; i++) {
+//         this.state.contactsOnDisplay.push(this.state.contacts[i]);
+//         this.state.contacts.push(this.state.contacts[i])
+//     }
 
-        //     this.setState({ loaded: true })
-        // }
+//     this.setState({ loaded: true })
+// }
