@@ -41,6 +41,7 @@ class ContactList extends React.Component {
             lastName: undefined,
             password: undefined,
             contacts: undefined,
+            loaded: false,
         };
 
         this.columns = [
@@ -85,6 +86,7 @@ class ContactList extends React.Component {
                     lastName: output[0].data.lastName,
                     password: output[0].data.password,
                     contacts: output[0].data.contacts,
+                    loaded: true,
                 })
             );
     };
