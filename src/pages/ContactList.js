@@ -7,6 +7,7 @@ import {
     notification,
     Tag,
     Spin,
+    Button,
     message,
 } from "antd";
 import "antd/dist/antd.css";
@@ -19,15 +20,16 @@ const deleteNotification = (contact_id) => {
     message.warning("Contact, " + contact_id + " has been deleted");
 };
 
-// const editNotification = (contact_id) => {
-//     message.warning('Contact, ' + contact_id + ' has been updated');
-// };
+const editNotification = (contact_id) => {
+    message.warning('Contact, ' + contact_id + ' has been updated');
+};
 
 // const createNotification = (contact_id) => {
 //     message.warning('Contact, ' + contact_id + ' has been added');
 // };
 
 class ContactList extends React.Component {
+
     constructor(props) {
         super(props);
 
@@ -40,9 +42,10 @@ class ContactList extends React.Component {
             lastName: undefined,
             password: undefined,
             contacts: undefined,
+            size: 0,
 
             loaded: false,
-            isEditing: false,
+            isEditing: true,
         };
 
         this.columns = [
@@ -69,7 +72,27 @@ class ContactList extends React.Component {
                 key: "contact_id",
             },
             {
-                title: "operation",
+                title: '',
+                dataIndex: 'operation',
+                render: (_: any, record: Item) => {
+                    return this.state.isEditing ? (
+                        <span>
+                            <a href="javascript:;" onClick={() => this.onSave(record.contact_id)} style={{ marginRight: 8 }}>
+                                Save
+                            </a>
+                            <Popconfirm title="Sure to cancel?" onConfirm={this.onSave(record.contact_id)} >
+                                <a>Cancel</a>
+                            </Popconfirm>
+                        </span>
+                    ) : (
+                            <a href="javascript:;" onClick={() => this.toggleEdit()}>
+                                Edit
+                            </a>
+                        );
+                },
+            },
+            {
+                title: "",
                 dataIndex: "operation",
                 fixed: "right",
                 render: (text, record, index) => (
@@ -92,13 +115,51 @@ class ContactList extends React.Component {
                     </Popconfirm>
                 ),
             },
+
         ];
 
+        this.toggleEdit = this.toggleEdit.bind(this);
+        this.onSave = this.onSave.bind(this);
         this.onDelete = this.onDelete.bind(this);
+        this.onAdd = this.onAdd.bind(this);
+    }
+
+    toggleEdit = () => {
+        console.log(this.state.isEditing);
+        this.setState({ isEditing: true });
+        console.log(this.state.isEditing);
     }
 
     onDelete = (contact_id) => {
         deleteNotification(contact_id);
+    };
+
+    onSave = (contact_id) => {
+        this.setState({ isEditing: false });
+        editNotification(contact_id);
+    }
+
+    onSave = (contact_id) => {
+        this.setState({ isEditing: false });
+    }
+
+    onAdd = () => {
+        const { size, contacts } = this.state;
+        console.log(size);
+        console.log(contacts);
+
+        let newContact = {
+            // contact_id: 000,
+            firstName: 'TEKASHI',
+            lastName: 'TRUMP',
+            phoneNumber: 69696969,
+            alertMessage: "I snitch",
+        };
+
+        this.setState({
+            contacts: [...contacts, newContact],
+            size: this.state.size + 1,
+        });
     };
 
     fetchData = () => {
@@ -117,6 +178,7 @@ class ContactList extends React.Component {
                     lastName: output[0].data.lastName,
                     password: output[0].data.password,
                     contacts: output[0].data.contacts,
+                    size: output[0].data.contacts.length,
                     loaded: true,
                 })
             );
@@ -147,6 +209,12 @@ class ContactList extends React.Component {
                             style={{ width: 215 }}
                         />
                     </div>
+                    <div>
+                        <Button onClick={this.onAdd} type="primary" style={{ marginBottom: 16 }}>
+                            Add Contact
+        </Button>
+                    </div>
+
                 </div>
                 <Table
                     columns={this.columns}
