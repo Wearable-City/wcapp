@@ -20,16 +20,16 @@ const UPDATE_URL = new URL(
     "https://wearablecity.netlify.com/.netlify/functions/users-edit-data"
 );
 
-const deleteNotification = (contact_id) => {
-    message.warning("Contact, " + contact_id + " has been deleted");
+const deleteNotification = (id) => {
+    message.warning("Contact, " + id + " has been deleted");
 };
 
-const editNotification = (contact_id) => {
-    message.warning('Contact, ' + contact_id + ' has been updated');
+const editNotification = (id) => {
+    message.warning('Contact, ' + id + ' has been updated');
 };
 
-// const createNotification = (contact_id) => {
-//     message.warning('Contact, ' + contact_id + ' has been added');
+// const createNotification = (id) => {
+//     message.warning('Contact, ' + id + ' has been added');
 // };
 
 class ContactList extends React.Component {
@@ -42,6 +42,7 @@ class ContactList extends React.Component {
             data: undefined,
             ringId: undefined,
             userName: undefined,
+            id: undefined,
             firstName: undefined,
             lastName: undefined,
             password: undefined,
@@ -57,24 +58,24 @@ class ContactList extends React.Component {
             {
                 title: "Contact First Name",
                 dataIndex: "firstName",
-                key: "contact_id",
+                key: "id",
             },
 
             {
-                title: "Contact First Name",
+                title: "Contact Last Name",
                 dataIndex: "lastName",
-                key: "contact_id",
+                key: "id",
             },
 
             {
                 title: "Contact Phone Number",
                 dataIndex: "phoneNumber",
-                key: "contact_id",
+                key: "id",
             },
             {
                 title: "Alert Message",
                 dataIndex: "alertMessage",
-                key: "contact_id",
+                key: "id",
             },
             {
                 title: '',
@@ -82,10 +83,10 @@ class ContactList extends React.Component {
                 render: (_: any, record: Item) => {
                     return this.state.isEditing ? (
                         <span>
-                            <a href="javascript:;" onClick={() => this.onSave(record.contact_id)} style={{ marginRight: 8 }}>
+                            <a href="javascript:;" onClick={() => this.onSave(record.id)} style={{ marginRight: 8 }}>
                                 Save
                             </a>
-                            <Popconfirm title="Sure to cancel?" onConfirm={this.onSave(record.contact_id)} >
+                            <Popconfirm title="Sure to cancel?" onConfirm={this.onSave(record.id)} >
                                 <a>Cancel</a>
                             </Popconfirm>
                         </span>
@@ -137,17 +138,13 @@ class ContactList extends React.Component {
         console.log(this.state.isEditing);
     }
 
-    onDelete = (contact_id) => {
-        deleteNotification(contact_id);
+    onDelete = (id) => {
+        deleteNotification(id);
     };
 
-    onSave = (contact_id) => {
+    onSave = (id) => {
         this.setState({ isEditing: false });
-        editNotification(contact_id);
-    }
-
-    onSave = (contact_id) => {
-        this.setState({ isEditing: false });
+        editNotification(id);
     }
 
     onAdd = () => {
@@ -156,11 +153,11 @@ class ContactList extends React.Component {
         console.log(contacts);
 
         let newContact = {
-            // contact_id: 000,
             firstName: 'TEKASHI',
             lastName: 'TRUMP',
             phoneNumber: 69696969,
             alertMessage: "I snitch",
+            id: "6969696-6969696"
         };
 
         this.setState({
@@ -180,6 +177,7 @@ class ContactList extends React.Component {
                     output: output,
                     data: output[0].data,
                     ringId: output[0].data.ringId,
+                    id: output[0].data.id,
                     userName: output[0].data.userName,
                     firstName: output[0].data.firstName,
                     lastName: output[0].data.lastName,
@@ -207,8 +205,8 @@ class ContactList extends React.Component {
         this.fetchData();
     };
 
-    handleSelect = (contact_id) => {
-        this.setState({ selectContact: contact_id });
+    handleSelect = (id) => {
+        this.setState({ selectContact: id });
     };
 
     componentDidUpdate = () => {
@@ -241,7 +239,7 @@ class ContactList extends React.Component {
                 <Table
                     columns={this.columns}
                     loading={!this.state.loaded}
-                    dataSource={!this.state.loaded ? [] : this.state.user.contacts}
+                    dataSource={!this.state.loaded ? [] : this.state.contacts}
                 />
                 <Button type="primary" onClick={this.syncData}>
                     Save
