@@ -210,7 +210,7 @@ class ContactList extends React.Component {
     };
 
     componentDidUpdate = () => {
-        console.log(this.state);
+        console.log("componentDidUpdate");
     };
 
     render() {
@@ -250,12 +250,3 @@ class ContactList extends React.Component {
 }
 
 export default ContactList;
-
-// if (!this.state.loaded) {
-//     for (let i = 0; i < this.state.contacts.length; i++) {
-//         this.state.contactsOnDisplay.push(this.state.contacts[i]);
-//         this.state.contacts.push(this.state.contacts[i])
-//     }
-
-//     this.setState({ loaded: true })
-// }
