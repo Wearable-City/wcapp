@@ -83,6 +83,7 @@ class ContactList extends React.Component {
     }
 
     componentDidMount() {
+        console.log("componentDidMount");
         this.fetchData();
     }
 
@@ -103,7 +104,7 @@ class ContactList extends React.Component {
         return (
             <div>
                 <div>
-                    <Title level={2} style={{ float: "left", color: "white" }}> ContactList </Title>
+                    <Title level={2} style={{ float: "left", color: "white" }}> Contact List </Title>
                     <div style={{ textAlign: "right" }}>
                         <Search
                             placeholder="Search"
