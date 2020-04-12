@@ -8,7 +8,6 @@ import {
     Tag,
     Spin,
     message,
-    DatePicker,
 } from "antd";
 import "antd/dist/antd.css";
 // import '../App.css';
@@ -131,7 +130,6 @@ class ContactList extends React.Component {
                     loading={!this.state.loaded}
                     dataSource={this.state.contacts}
                 />
-                <DatePicker />
             </div>
         );
     }
