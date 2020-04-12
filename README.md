@@ -81,7 +81,6 @@ Our app, specifically in `ContactList`, will get a `user` object from the API, l
         ]
     }
     ```
--
 
 #### Edit user data
 
@@ -163,4 +162,53 @@ Our app, specifically in `ContactList`, will get a `user` object from the API, l
 
     and it would update the `contacts` array to have that second contact deleted. We have a local copy of the user's data that we get when we fetch; it's the state data (`this.state.user`). Make any changes to _that_ object. Once the user is done changing stuff (adding, editing, deleting, etc), simply make that object the body of a request to this endpoint and all those changes will save.
 
-####
+#### Get a user by `ringId`
+
+-   Endpoint: https://wearablecity.netlify.com/.netlify/functions/users-read-by-ringid
+-   Method: `GET`
+-   Query String Params:
+    -   `ringid`: the ring ID that you want to use to identify a user
+-   Response:
+    ```json
+    {
+        "ref": {
+            "@ref": {
+                "id": "257115234834055699",
+                "collection": {
+                    "@ref": {
+                        "id": "users",
+                        "collection": {
+                            "@ref": {
+                                "id": "collections"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "ts": 1586732962950000,
+        "data": {
+            "ringId": "42069",
+            "userName": "test1",
+            "firstName": "curl",
+            "lastName": "Template",
+            "password": "password",
+            "contacts": [
+                {
+                    "id": "ecdbb7e3-5df7-444c-abdc-f3896d245dae",
+                    "firstName": "New",
+                    "lastName": "Name",
+                    "phoneNumber": "1234567890",
+                    "alertMessage": "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus."
+                },
+                {
+                    "id": "5cea42f5-9637-40c7-93d6-cf108abf5435",
+                    "firstName": "Name2",
+                    "lastName": "Contact",
+                    "phoneNumber": "1234567890",
+                    "alertMessage": "Sed posuere consectetur est at lobortis."
+                }
+            ]
+        }
+    }
+    ```
