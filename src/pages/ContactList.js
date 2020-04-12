@@ -1,5 +1,16 @@
-import React, { Component } from 'react';
-import { Table, Input, Typography, Popconfirm, notification, Tag, Spin, message } from 'antd';
+import React, { Component } from "react";
+import {
+    Table,
+    Input,
+    Typography,
+    Popconfirm,
+    notification,
+    Tag,
+    Spin,
+    message,
+    DatePicker,
+} from "antd";
+import "antd/dist/antd.css";
 // import '../App.css';
 
 const { Title } = Typography;
@@ -29,37 +40,33 @@ class ContactList extends React.Component {
             firstName: undefined,
             lastName: undefined,
             password: undefined,
-            contacts: undefined
+            contacts: undefined,
         };
 
         this.columns = [
             {
-                title: 'Contact First Name',
-                dataIndex: 'firstName',
-                key: 'contact_id',
-
+                title: "Contact First Name",
+                dataIndex: "firstName",
+                key: "contact_id",
             },
 
             {
-                title: 'Contact First Name',
-                dataIndex: 'lastName',
-                key: 'contact_id',
-
+                title: "Contact First Name",
+                dataIndex: "lastName",
+                key: "contact_id",
             },
 
             {
-                title: 'Contact Phone Number',
-                dataIndex: 'phoneNumber',
-                key: 'contact_id',
-
+                title: "Contact Phone Number",
+                dataIndex: "phoneNumber",
+                key: "contact_id",
             },
             {
-                title: 'Alert Message',
-                dataIndex: 'alertMessage',
-                key: 'contact_id',
-
-            }
-        ]
+                title: "Alert Message",
+                dataIndex: "alertMessage",
+                key: "contact_id",
+            },
+        ];
     }
 
     fetchData = () => {
@@ -67,8 +74,8 @@ class ContactList extends React.Component {
             "https://wearablecity.netlify.com/.netlify/functions/users-read-by-ringid?ringid=42069",
             { mode: "cors" }
         )
-            .then(response => response.json())
-            .then(output =>
+            .then((response) => response.json())
+            .then((output) =>
                 this.setState({
                     output: output,
                     data: output[0].data,
@@ -77,10 +84,10 @@ class ContactList extends React.Component {
                     firstName: output[0].data.firstName,
                     lastName: output[0].data.lastName,
                     password: output[0].data.password,
-                    contacts: output[0].data.contacts
+                    contacts: output[0].data.contacts,
                 })
             );
-    }
+    };
 
     componentDidMount() {
         console.log("componentDidMount");
@@ -88,8 +95,8 @@ class ContactList extends React.Component {
     }
 
     handleSelect = (contact_id) => {
-        this.setState({ selectContact: contact_id })
-    }
+        this.setState({ selectContact: contact_id });
+    };
 
     render() {
         // if (!this.state.loaded) {
@@ -104,7 +111,10 @@ class ContactList extends React.Component {
         return (
             <div>
                 <div>
-                    <Title level={2} style={{ float: "left", color: "white" }}> Contact List </Title>
+                    <Title level={2} style={{ float: "left", color: "white" }}>
+                        {" "}
+                        Contact List{" "}
+                    </Title>
                     <div style={{ textAlign: "right" }}>
                         <Search
                             placeholder="Search"
@@ -119,6 +129,7 @@ class ContactList extends React.Component {
                     loading={!this.state.loaded}
                     dataSource={this.state.contacts}
                 />
+                <DatePicker />
             </div>
         );
     }
