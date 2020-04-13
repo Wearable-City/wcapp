@@ -28,6 +28,7 @@ exports.handler = (event, context, callback) => {
             // then query the refs
             return client.query(getUserQuery).then((ret) => {
                 // call Twilio API
+                console.log(ret);
                 ret[0].data.contacts.forEach((contact) => {
                     console.log(`Calling twilio for ${contact.phoneNumber}`);
                 });
