@@ -3,37 +3,6 @@ import { Button } from "antd";
 import { Link } from "react-router-dom";
 
 class HomePage extends React.Component {
-    getBatteryLevel = () => {
-        // get battery levels
-        console.log("Requesting Bluetooth Device...");
-        navigator.bluetooth
-            .requestDevice({ filters: [{ services: ["battery_service"] }] })
-            .then((device) => {
-                console.log("Connecting to GATT Server...");
-                return device.gatt.connect();
-            })
-            .then((server) => {
-                console.log("Getting Battery Service...");
-                return server.getPrimaryService("battery_service");
-            })
-            .then((service) => {
-                console.log("Getting Battery Level Characteristic...");
-                return service.getCharacteristic("battery_level");
-            })
-            .then((characteristic) => {
-                console.log("Reading Battery Level...");
-                return characteristic.readValue();
-            })
-            .then((value) => {
-                let batteryLevel = value.getUint8(0);
-                console.log("> Battery Level is " + batteryLevel + "%");
-                document.getElementById("devbattery").innerHTML = `${batteryLevel}%`;
-            })
-            .catch((error) => {
-                console.log("Argh! " + error);
-            });
-    };
-
     myCharacteristic;
 
     handleNotifications = (event) => {
@@ -46,12 +15,11 @@ class HomePage extends React.Component {
         //   a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
         // }
         // log('> ' + a.join(' '));
+
+        // TODO: if we get an alert notification from the ring, we should hit our alert API endpoint here.
         let dec = new TextDecoder();
         console.log(dec.decode(value));
     };
-
-    // UUID for service: 0000fff0-0000-1000-8000-00805f9b34fb
-    // UUID for characteristic: 0000fff1-0000-1000-8000-00805f9b34fb
 
     onStartButtonClick = () => {
         let serviceUuid = document.querySelector("#service1").value;
