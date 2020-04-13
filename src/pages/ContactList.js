@@ -29,7 +29,7 @@ const UPDATE_URL = new URL("https://wearablecity.netlify.com/.netlify/functions/
 const deleteNotification = (id) => { message.warning(id + " has been deleted"); };
 const saveSuccessNotification = () => { message.success("Data has been saved!"); };
 const saveFailedNotification = (err) => { message.error("Saving data failed 😞 Please try again!"); console.error(err); };
-const editNotification = (id) => { message.warning(id + " has been updated"); };
+const editNotification = () => { message.warning("Contact has been updated"); };
 const createNotification = (id) => { message.success(id + " has been added"); };
 
 class ContactList extends React.Component {
@@ -147,7 +147,7 @@ class ContactList extends React.Component {
             showEditModal: false
         });
 
-        editNotification("update", "update");
+        editNotification();
 
     };
 
@@ -280,14 +280,20 @@ class ContactList extends React.Component {
                         Save
                     </Button>
 
-                    <Button
-                        danger
-                        type="secondary"
-                        onClick={this.deleteAll}
-                        style={{ float: "left", marginLeft: "4em" }}
+                    <Popconfirm
+                        title="Sure to delete all?"
+                        okType="danger"
+                        onConfirm={this.deleteAll}
                     >
-                        Delete All
+                        <Button
+                            danger
+                            type="secondary"
+                            // onClick={this.deleteAll}
+                            style={{ float: "left", marginLeft: "4em" }}
+                        >
+                            Delete All
                     </Button>
+                    </Popconfirm>
                 </div>
 
                 <div>
