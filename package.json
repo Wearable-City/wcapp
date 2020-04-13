@@ -3,13 +3,16 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@ant-design/icons": "^4.0.6",
         "@testing-library/jest-dom": "^4.2.4",
         "@testing-library/react": "^9.3.2",
         "@testing-library/user-event": "^7.1.2",
+        "antd": "^4.1.2",
         "chalk": "^3.0.0",
         "faunadb": "^2.11.1",
         "react": "^16.12.0",
         "react-dom": "^16.12.0",
+        "react-router-dom": "^5.1.2",
         "react-scripts": "3.3.1",
         "readline": "^1.3.0"
     },
@@ -18,7 +21,8 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "bootstrap": "node ./scripts/bootstrap-fauna-database.js"
+        "bootstrap": "node ./scripts/bootstrap-fauna-database.js",
+        "serve-static": "npx http-server build"
     },
     "eslintConfig": {
         "extends": "react-app"
