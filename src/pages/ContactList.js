@@ -9,11 +9,11 @@ import {
     Modal,
     Input,
     Row,
-    Col,
-    Divider
+    Col
 } from "antd";
 
-import Icon from '@ant-design/icons'
+import { IdcardOutlined, PhoneOutlined, MessageOutlined, RightOutlined } from '@ant-design/icons';
+
 import "antd/dist/antd.css";
 
 const { Title, Text } = Typography;
@@ -226,7 +226,6 @@ class ContactList extends React.Component {
     };
 
     onChangeString(e) {
-        console.log(e.target.id);
         this.setState({ [e.target.id]: e.target.value });
     }
 
@@ -301,7 +300,7 @@ class ContactList extends React.Component {
                                     size="large"
                                     prefix={
                                         <Tooltip title="CHAR 64, Cannot be left empty">
-                                            <Icon type="project" style={{ color: 'rgba(0,0,0,.25)' }} /> '
+                                            <IdcardOutlined /> '
                             </Tooltip>
                                     }
                                 />
@@ -317,7 +316,7 @@ class ContactList extends React.Component {
                                             size="large"
                                             prefix={
                                                 <Tooltip title="Cannot have special characters">
-                                                    <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
+                                                    <RightOutlined style={{ color: 'rgba(0,0,0,.65)' }} />
                                                 </Tooltip>
                                             }
                                             style={{ marginTop: "3.9%" }}
@@ -333,7 +332,7 @@ class ContactList extends React.Component {
                                             size="large"
                                             prefix={
                                                 <Tooltip title="Cannot have special characters">
-                                                    <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
+                                                    <RightOutlined style={{ color: 'rgba(0,0,0,.65)' }} />
                                                 </Tooltip>
                                             }
                                             style={{ marginTop: "3.9%" }}
@@ -349,8 +348,8 @@ class ContactList extends React.Component {
                                     onChange={this.onChangeString}
                                     size="large"
                                     prefix={
-                                        <Tooltip title="Cannot have special characters">
-                                            <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
+                                        <Tooltip title="Can only have Numeric Characters">
+                                            <PhoneOutlined style={{ color: 'rgba(0,0,0,.65)' }} />
                                         </Tooltip>
                                     }
                                     style={{ marginTop: "3.9%" }}
@@ -365,8 +364,8 @@ class ContactList extends React.Component {
                                     onChange={this.onChangeString}
                                     size="large"
                                     prefix={
-                                        <Tooltip title="Cannot have special characters">
-                                            <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
+                                        <Tooltip title="Customize your message to your liking!">
+                                            <MessageOutlined style={{ color: 'rgba(0,0,0,.65)' }} />
                                         </Tooltip>
                                     }
                                     style={{ marginTop: "5%" }}
