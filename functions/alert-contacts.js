@@ -18,7 +18,7 @@ function textContacts(contacts) {
     contacts.forEach((e) => {
         twilioClient.messages
             .create({
-                body: "This is the ship that made the Kessel Run in fourteen parsecs?",
+                body: e.alertMessage,
                 from: TWILIO_PHONE_NUM,
                 to: e.phoneNumber,
             })
