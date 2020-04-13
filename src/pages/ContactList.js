@@ -1,33 +1,38 @@
 import React, { Component } from "react";
 import {
     Table,
-    Input,
     Typography,
     Popconfirm,
-    notification,
-    Tag,
-    Spin,
     message,
     Button,
+    Tooltip,
+    Modal,
+    Input,
+    Row,
+    Col,
+    Divider
 } from "antd";
+
+import Icon from '@ant-design/icons'
 import "antd/dist/antd.css";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
+const { TextArea } = Input;
 
 const UPDATE_URL = new URL(
     "https://wearablecity.netlify.com/.netlify/functions/users-edit-data"
 );
 
 const deleteNotification = (id) => {
-    message.warning("Contact, " + id + " has been deleted");
+    message.warning(id + " has been deleted");
 };
 
 const editNotification = (id) => {
-    message.warning('Contact, ' + id + ' has been updated');
+    message.warning(id + ' has been updated');
 };
 
 const createNotification = (id) => {
-    message.warning('Contact, ' + id + ' has been added');
+    message.warning(id + ' has been added');
 };
 
 class ContactList extends React.Component {
@@ -36,18 +41,19 @@ class ContactList extends React.Component {
         super(props);
 
         this.state = {
-            output: undefined,
-            data: undefined,
-            ringId: undefined,
-            userName: undefined,
-            id: undefined,
-            firstName: undefined,
-            lastName: undefined,
-            password: undefined,
-            contacts: undefined,
-            size: 0,
             ref: undefined,
             user: undefined,
+
+            //Add Contact Stuff
+            showAddModal: false,
+            modalIsLoading: false,
+            id: "",
+            firstName: "",
+            lastName: "",
+            phoneNumber: "",
+            alertMessage: "",
+            //End of Add Contact Stuff
+
             loaded: false,
             isEditing: true,
         };
@@ -56,23 +62,23 @@ class ContactList extends React.Component {
             {
                 title: "Contact First Name",
                 dataIndex: "firstName",
-                key: "id",
+                key: "id" + "firstName",
             },
 
             {
                 title: "Contact Last Name",
                 dataIndex: "lastName",
-                key: "id",
+                key: "id" + "lastName",
             },
             {
                 title: "Contact Phone Number",
                 dataIndex: "phoneNumber",
-                key: "id",
+                key: "id" + "phoneNumber",
             },
             {
                 title: "Alert Message",
                 dataIndex: "alertMessage",
-                key: "id",
+                key: "id" + "alertMessage",
             },
             {
                 title: '',
@@ -127,6 +133,7 @@ class ContactList extends React.Component {
         this.onSave = this.onSave.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onAdd = this.onAdd.bind(this);
+        this.onChangeString = this.onChangeString.bind(this);
     }
 
     toggleEdit = () => {
@@ -141,27 +148,67 @@ class ContactList extends React.Component {
 
     onSave = (id) => {
         this.setState({ isEditing: false });
-        createNotification(id);
+    }
+
+    toggleModal = () => {
+        this.setState(prevState => ({
+            showAddModal: !prevState.showAddModal,
+            id: "",
+            firstName: "",
+            lastName: "",
+            phoneNumber: "",
+            alertMessage: "",
+        }));
     }
 
     onAdd = () => {
-        const { size, contacts } = this.state;
-        console.log(size);
-        console.log(contacts);
-
-        let newContact = {
-            firstName: 'TEKASHI',
-            lastName: 'TRUMP',
-            phoneNumber: 69696969,
-            alertMessage: "I snitch",
-            id: "6969696-6969696"
+        let contacts = this.state.user.contacts;
+        const newContact = {
+            id: this.state.id,
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            phoneNumber: this.state.phoneNumber,
+            alertMessage: this.state.alertMessage,
         };
+        contacts = [...contacts, newContact]
+        contacts = { contacts };
+        UPDATE_URL.searchParams.set("ref", this.state.ref);
+        fetch(UPDATE_URL.href, {
+            mode: "cors",
+            method: 'POST',
+            body: JSON.stringify(contacts)
+        })
+            .then((response) => response.json())
+            .then((output) =>
+                this.setState({
+                    id: "",
+                    firstName: "",
+                    lastName: "",
+                    phoneNumber: "",
+                    alertMessage: "",
+                    user: output.data
+                }))
+        this.toggleModal();
+        createNotification(newContact.firstName + " " + newContact.lastName);
 
-        this.setState({
-            contacts: [...contacts, newContact],
-            size: this.state.size + 1,
-        });
     };
+
+    deleteAll = () => {
+        let contacts = [];
+        contacts = { contacts };
+        UPDATE_URL.searchParams.set("ref", this.state.ref);
+        fetch(UPDATE_URL.href, {
+            mode: "cors",
+            method: 'POST',
+            body: JSON.stringify(contacts)
+        })
+            .then((response) => response.json())
+            .then((output) =>
+                this.setState({
+                    user: output.data
+                }))
+        message.warning("All contacts have been deleted");
+    }
 
     fetchData = () => {
         fetch(
@@ -171,22 +218,17 @@ class ContactList extends React.Component {
             .then((response) => response.json())
             .then((output) =>
                 this.setState({
-                    output: output,
-                    data: output[0].data,
-                    ringId: output[0].data.ringId,
-                    id: output[0].data.id,
-                    userName: output[0].data.userName,
-                    firstName: output[0].data.firstName,
-                    lastName: output[0].data.lastName,
-                    password: output[0].data.password,
-                    contacts: output[0].data.contacts,
-                    size: output[0].data.contacts.length,
                     user: output[0].data,
                     ref: output[0].ref["@ref"].id,
                     loaded: true,
                 })
-            );
+            ).then(() => console.log(this.state.user.contacts));
     };
+
+    onChangeString(e) {
+        console.log(e.target.id);
+        this.setState({ [e.target.id]: e.target.value });
+    }
 
     syncData = () => {
         UPDATE_URL.searchParams.set("ref", this.state.ref);
@@ -214,22 +256,125 @@ class ContactList extends React.Component {
                 </Title>
 
 
-
-
                 <Table
                     columns={this.columns}
                     loading={!this.state.loaded}
-                    dataSource={!this.state.loaded ? [] : this.state.contacts}
+                    dataSource={!this.state.loaded ? [] : this.state.user.contacts}
                 />
-                <div style={{ marginLeft: "3em" }}>
-                    <Button onClick={this.onAdd} type="primary" style={{ float: "left", marginRight: "2em" }}>
+                <div style={{ marginLeft: "2.5em", marginTop: "1.5em" }}>
+                    <Button onClick={this.toggleModal} type="primary" style={{ float: "left", marginRight: "2em" }}>
                         Add Contact
-                </Button>
-                    <Button type="secondary" onClick={this.syncData} style={{ float: "left" }}>
+                    </Button>
+                    <Button type="primary" onClick={this.syncData} style={{ float: "left" }}>
                         Save
-                </Button>
+                    </Button>
 
+                    <Button danger type="secondary" onClick={this.deleteAll} style={{ float: "left", marginLeft: "2em" }}>
+                        Delete All
+                    </Button>
+                </div>
 
+                <div>
+                    <Modal
+                        centered
+                        visible={this.state.showAddModal}
+                        title={"Creating New Emergency Contact"}
+                        onOk={this.onSave}
+                        onCancel={this.toggleModal}
+                        footer={[
+                            <Button key="back" onClick={this.toggleModal}>
+                                Cancel
+                            </Button>,
+                            <Button key="submit" type="primary" loading={this.state.modalIsLoading} onClick={this.onAdd}>
+                                Submit
+                            </Button>,
+                        ]}
+                    >
+                        <div style={{ textAlign: "center" }}>
+                            <Title level={3}> Input Contact Details </Title>
+                            <div>
+                                <Input
+                                    placeholder="Contact ID"
+                                    id="id"
+                                    value={this.state.id}
+                                    onChange={this.onChangeString}
+                                    size="large"
+                                    prefix={
+                                        <Tooltip title="CHAR 64, Cannot be left empty">
+                                            <Icon type="project" style={{ color: 'rgba(0,0,0,.25)' }} /> '
+                            </Tooltip>
+                                    }
+                                />
+
+                                <Row>
+                                    <Col span={12}>
+                                        <Input
+                                            allowClear
+                                            placeholder="First Name"
+                                            id="firstName"
+                                            value={this.state.firstName}
+                                            onChange={this.onChangeString}
+                                            size="large"
+                                            prefix={
+                                                <Tooltip title="Cannot have special characters">
+                                                    <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
+                                                </Tooltip>
+                                            }
+                                            style={{ marginTop: "3.9%" }}
+                                        />
+                                    </Col>
+                                    <Col span={12}>
+                                        <Input
+                                            allowClear
+                                            placeholder="Last Name"
+                                            id="lastName"
+                                            value={this.state.lastName}
+                                            onChange={this.onChangeString}
+                                            size="large"
+                                            prefix={
+                                                <Tooltip title="Cannot have special characters">
+                                                    <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
+                                                </Tooltip>
+                                            }
+                                            style={{ marginTop: "3.9%" }}
+                                        />
+                                    </Col>
+                                </Row>
+
+                                <Input
+                                    allowClear
+                                    placeholder="Contact Phone Number"
+                                    id="phoneNumber"
+                                    value={this.state.phoneNumber}
+                                    onChange={this.onChangeString}
+                                    size="large"
+                                    prefix={
+                                        <Tooltip title="Cannot have special characters">
+                                            <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
+                                        </Tooltip>
+                                    }
+                                    style={{ marginTop: "3.9%" }}
+                                />
+
+                                <TextArea
+                                    rows={4}
+                                    allowClear
+                                    placeholder="Alert Message"
+                                    id="alertMessage"
+                                    value={this.state.alertMessage}
+                                    onChange={this.onChangeString}
+                                    size="large"
+                                    prefix={
+                                        <Tooltip title="Cannot have special characters">
+                                            <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
+                                        </Tooltip>
+                                    }
+                                    style={{ marginTop: "5%" }}
+                                />
+                                <br />
+                            </div>
+                        </div>
+                    </Modal>
                 </div>
             </div>
         );
