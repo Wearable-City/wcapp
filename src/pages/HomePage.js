@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { Card, Avatar } from 'antd';
 import { EditOutlined, ContactsOutlined, SettingOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
-import "../App.css"
 
 const { Meta } = Card;
 
