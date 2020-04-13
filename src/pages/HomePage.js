@@ -6,6 +6,7 @@ import { EditOutlined, ContactsOutlined, SettingOutlined } from '@ant-design/ico
 import "antd/dist/antd.css";
 
 const { Meta } = Card;
+//future use
 
 class HomePage extends React.Component {
     myCharacteristic;
