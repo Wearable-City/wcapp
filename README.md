@@ -63,7 +63,7 @@ Our app, specifically in `ContactList`, will get a `user` object from the API, l
 -   Endpoint: https://wearablecity.netlify.com/.netlify/functions/users-create
 -   Method: `POST`
 -   Body:
-    ```JSON
+    ```json
     {
         "ringId": "this should be a number, you'll have to add it manually. I'll automate it later.",
         "userName": "a_username",
@@ -77,7 +77,7 @@ Our app, specifically in `ContactList`, will get a `user` object from the API, l
                 "lastName": "Doe",
                 "phoneNumber": "1234567890",
                 "alertMessage": "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus."
-            },
+            }
         ]
     }
     ```
@@ -87,12 +87,12 @@ Our app, specifically in `ContactList`, will get a `user` object from the API, l
 -   Endpoint: https://wearablecity.netlify.com/.netlify/functions/users-edit-data
 -   Method: `POST`
 -   Query String Params:
-    -   `ref`: a ref number, as indicated up in the [user description section](#What-does-a-user-look-like?). Stored in `ref.id`.
+    -   `ref`: a ref number, as indicated up in the [user description section](#What-does-a-user-object-look-like). Stored in `ref.id`.
 -   Body:
-    This method is fancy. You can send it a JSON object with any of the keys for a [user](#What-does-a-user-look-like?) and it will update it with the value you assign that key in the request body.
+    This method is fancy. You can send it a JSON object with any of the keys for a [user](#What-does-a-user-object-look-like) and it will update it with the value you assign that key in the request body.
     So if you sent
 
-    ```JSON
+    ```json
     {
         "userName": "MyNewUserName"
     }
@@ -100,22 +100,22 @@ Our app, specifically in `ContactList`, will get a `user` object from the API, l
 
     to ref 257115234834055699 (the one from the example above), that user object would now be
 
-    ```JSON
+    ```json
     {
         "ref": {
-        "@ref": {
-            "id": "257115234834055699",
-            "collection": {
             "@ref": {
-                "id": "users",
+                "id": "257115234834055699",
                 "collection": {
-                "@ref": {
-                    "id": "collections"
-                }
+                    "@ref": {
+                        "id": "users",
+                        "collection": {
+                            "@ref": {
+                                "id": "collections"
+                            }
+                        }
+                    }
                 }
             }
-            }
-        }
         },
         "ts": 1586732962950000,
         "data": {
@@ -146,7 +146,7 @@ Our app, specifically in `ContactList`, will get a `user` object from the API, l
 
     Notice that the only thing that changed is the `userName` key. This works with any other key. So if you wanted to delete the second entry from `contacts` (the one named Name2 Contact), you could send
 
-    ```JSON
+    ```json
     {
         "contacts": [
             {
@@ -170,6 +170,59 @@ Our app, specifically in `ContactList`, will get a `user` object from the API, l
     -   `ringid`: the ring ID that you want to use to identify a user
 -   Response:
     ```json
+    [
+        {
+            "ref": {
+                "@ref": {
+                    "id": "257115234834055699",
+                    "collection": {
+                        "@ref": {
+                            "id": "users",
+                            "collection": {
+                                "@ref": {
+                                    "id": "collections"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ts": 1586732962950000,
+            "data": {
+                "ringId": "42069",
+                "userName": "test1",
+                "firstName": "curl",
+                "lastName": "Template",
+                "password": "password",
+                "contacts": [
+                    {
+                        "id": "ecdbb7e3-5df7-444c-abdc-f3896d245dae",
+                        "firstName": "New",
+                        "lastName": "Name",
+                        "phoneNumber": "1234567890",
+                        "alertMessage": "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus."
+                    },
+                    {
+                        "id": "5cea42f5-9637-40c7-93d6-cf108abf5435",
+                        "firstName": "Name2",
+                        "lastName": "Contact",
+                        "phoneNumber": "1234567890",
+                        "alertMessage": "Sed posuere consectetur est at lobortis."
+                    }
+                ]
+            }
+        }
+    ]
+    ```
+
+#### Get user by `userName`
+
+-   Endpoint: https://wearablecity.netlify.com/.netlify/functions/users-read-by-username
+-   Method: `GET`
+-   Response:
+
+```json
+[
     {
         "ref": {
             "@ref": {
@@ -211,4 +264,5 @@ Our app, specifically in `ContactList`, will get a `user` object from the API, l
             ]
         }
     }
-    ```
+]
+```
