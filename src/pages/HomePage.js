@@ -124,7 +124,9 @@ class HomePage extends React.Component {
                 </Card> */}
                 <Link to="/settings">
                     <Button type="primary">My Contacts</Button>
+
                 </Link>
+                <Button danger type="primary" onClick={this.sendAlert}>Send Alert</Button>
                 <div class="container" id="header-container"></div>
                 <div class="container" id="content-container">
                     <div
