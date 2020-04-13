@@ -11,10 +11,8 @@ import {
     Button,
 } from "antd";
 import "antd/dist/antd.css";
-// import '../App.css';
 
 const { Title } = Typography;
-const Search = Input.Search;
 
 const UPDATE_URL = new URL(
     "https://wearablecity.netlify.com/.netlify/functions/users-edit-data"
@@ -28,9 +26,9 @@ const editNotification = (id) => {
     message.warning('Contact, ' + id + ' has been updated');
 };
 
-// const createNotification = (id) => {
-//     message.warning('Contact, ' + id + ' has been added');
-// };
+const createNotification = (id) => {
+    message.warning('Contact, ' + id + ' has been added');
+};
 
 class ContactList extends React.Component {
 
@@ -66,7 +64,6 @@ class ContactList extends React.Component {
                 dataIndex: "lastName",
                 key: "id",
             },
-
             {
                 title: "Contact Phone Number",
                 dataIndex: "phoneNumber",
@@ -144,7 +141,7 @@ class ContactList extends React.Component {
 
     onSave = (id) => {
         this.setState({ isEditing: false });
-        editNotification(id);
+        createNotification(id);
     }
 
     onAdd = () => {
@@ -205,10 +202,6 @@ class ContactList extends React.Component {
         this.fetchData();
     };
 
-    handleSelect = (id) => {
-        this.setState({ selectContact: id });
-    };
-
     componentDidUpdate = () => {
         console.log("componentDidUpdate");
     };
@@ -216,34 +209,28 @@ class ContactList extends React.Component {
     render() {
         return (
             <div>
-                <div>
-                    <Title level={2} style={{ float: "left", color: "white" }}>
-                        {" "}
-                        Contact List{" "}
-                    </Title>
-                    <div style={{ textAlign: "right" }}>
-                        <Search
-                            placeholder="Search"
-                            id="search_contact"
-                            onChange={this.handleChange}
-                            style={{ width: 215 }}
-                        />
-                    </div>
-                    <div>
-                        <Button onClick={this.onAdd} type="primary" style={{ marginBottom: 16 }}>
-                            Add Contact
-        </Button>
-                    </div>
+                <Title level={2} style={{ textAlign: "center", padding: "1em" }}>
+                    {" "}Contact List{" "}
+                </Title>
 
-                </div>
+
+
+
                 <Table
                     columns={this.columns}
                     loading={!this.state.loaded}
                     dataSource={!this.state.loaded ? [] : this.state.contacts}
                 />
-                <Button type="primary" onClick={this.syncData}>
-                    Save
+                <div style={{ marginLeft: "3em" }}>
+                    <Button onClick={this.onAdd} type="primary" style={{ float: "left", marginRight: "2em" }}>
+                        Add Contact
                 </Button>
+                    <Button type="secondary" onClick={this.syncData} style={{ float: "left" }}>
+                        Save
+                </Button>
+
+
+                </div>
             </div>
         );
     }
