@@ -19,7 +19,7 @@ function textContacts(contacts) {
         twilioClient.messages
             .create({
                 body: "This is the ship that made the Kessel Run in fourteen parsecs?",
-                from: TEST_NUM, //TWILIO_PHONE_NUM,
+                from: TWILIO_PHONE_NUM,
                 to: e.phoneNumber,
             })
             .then((message) => console.log(message.sid));
