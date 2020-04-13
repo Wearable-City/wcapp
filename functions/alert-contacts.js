@@ -4,19 +4,27 @@ const q = faunadb.query;
 const client = new faunadb.Client({
     secret: process.env.FAUNADB_SERVER_SECRET,
 });
-const accountSid = process.env.TWILIO_AUTH;
+const accountSid = process.env.TWILIO_SID;
 const authToken = process.env.TWILIO_AUTH;
 const twilioClient = require("twilio")(accountSid, authToken);
 const TWILIO_PHONE_NUM = "+12056288846";
 const TEST_NUM = "+14044287664";
 
-twilioClient.messages
-    .create({
-        body: "This is the ship that made the Kessel Run in fourteen parsecs?",
-        from: TWILIO_PHONE_NUM,
-        to: TEST_NUM,
-    })
-    .then((message) => console.log(message.sid));
+/**
+ * Texts an array of contacts
+ * @param {Array<Object>} contacts
+ */
+function textContacts(contacts) {
+    contacts.forEach((e) => {
+        twilioClient.messages
+            .create({
+                body: "This is the ship that made the Kessel Run in fourteen parsecs?",
+                from: TEST_NUM, //TWILIO_PHONE_NUM,
+                to: e.phoneNumber,
+            })
+            .then((message) => console.log(message.sid));
+    });
+}
 
 exports.handler = (event, context, callback) => {
     console.log("Function `alert-contacts` invoked");
@@ -42,9 +50,10 @@ exports.handler = (event, context, callback) => {
             return client.query(getUserQuery).then((ret) => {
                 // call Twilio API
                 console.log(ret);
-                ret[0].data.contacts.forEach((contact) => {
-                    console.log(`Calling twilio for ${contact.phoneNumber}`);
-                });
+                // ret[0].data.contacts.forEach((contact) => {
+                //     console.log(`Calling twilio for ${contact.phoneNumber}`);
+                // });
+                textContacts(ret[0].data.contacts);
                 return callback(null, {
                     statusCode: 200,
                     body: JSON.stringify(ret),
