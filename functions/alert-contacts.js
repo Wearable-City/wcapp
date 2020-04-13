@@ -4,6 +4,19 @@ const q = faunadb.query;
 const client = new faunadb.Client({
     secret: process.env.FAUNADB_SERVER_SECRET,
 });
+const accountSid = process.env.TWILIO_AUTH;
+const authToken = process.env.TWILIO_AUTH;
+const twilioClient = require("twilio")(accountSid, authToken);
+const TWILIO_PHONE_NUM = "+12056288846";
+const TEST_NUM = "+14044287664";
+
+twilioClient.messages
+    .create({
+        body: "This is the ship that made the Kessel Run in fourteen parsecs?",
+        from: TWILIO_PHONE_NUM,
+        to: TEST_NUM,
+    })
+    .then((message) => console.log(message.sid));
 
 exports.handler = (event, context, callback) => {
     console.log("Function `alert-contacts` invoked");
