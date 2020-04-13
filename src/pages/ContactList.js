@@ -181,11 +181,6 @@ class ContactList extends React.Component {
             .then((response) => response.json())
             .then((output) =>
                 this.setState({
-                    id: "",
-                    firstName: "",
-                    lastName: "",
-                    phoneNumber: "",
-                    alertMessage: "",
                     user: output.data
                 }))
         this.toggleModal();
@@ -300,8 +295,8 @@ class ContactList extends React.Component {
                                     size="large"
                                     prefix={
                                         <Tooltip title="CHAR 64, Cannot be left empty">
-                                            <IdcardOutlined /> '
-                            </Tooltip>
+                                            <IdcardOutlined />
+                                        </Tooltip>
                                     }
                                 />
 
