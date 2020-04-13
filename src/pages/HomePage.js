@@ -1,6 +1,12 @@
 import React from "react";
 import { Button } from "antd";
 import { Link } from "react-router-dom";
+import { Card, Avatar } from 'antd';
+import { EditOutlined, ContactsOutlined, SettingOutlined } from '@ant-design/icons';
+import "antd/dist/antd.css";
+import "../App.css"
+
+const { Meta } = Card;
 
 class HomePage extends React.Component {
     myCharacteristic;
@@ -19,6 +25,17 @@ class HomePage extends React.Component {
         // TODO: if we get an alert notification from the ring, we should hit our alert API endpoint here.
         let dec = new TextDecoder();
         console.log(dec.decode(value));
+        if (dec.decode(value) === 1) {
+            this.sendAlert();
+        }
+    };
+
+    sendAlert = () => {
+        fetch('https://wearablecity.netlify.com/.netlify/functions/alert-contacts?ringid=42069', {
+            method: "GET",
+        }).catch((err) => {
+            console.log(err);
+        });
     };
 
     onStartButtonClick = () => {
@@ -83,8 +100,30 @@ class HomePage extends React.Component {
     render() {
         return (
             <div>
+                {/* <Card
+                    style={{ width: 300 }}
+                    cover={
+                        <img
+                            alt="example"
+                            src="https://www.gatech.edu/sites/default/files/uploads/images/superblock_images/tower.png"
+                        />
+                    }
+                    actions={[
+                        <SettingOutlined key="setting" />,
+                        <EditOutlined key="edit" />,
+                        <Link to="/settings">
+                            <ContactsOutlined key="contacts" />
+                        </Link>,
+                    ]}
+                >
+                    <Meta
+                        avatar={<Avatar src="https://www.pinclipart.com/picdir/big/157-1578752_wi-fi-computer-icons-hotspot-wireless-signal-transparent.png" />}
+                        title="Ring Alert"
+                        description="This is the description"
+                    />
+                </Card> */}
                 <Link to="/settings">
-                    <Button type="primary">Settings</Button>
+                    <Button type="primary">My Contacts</Button>
                 </Link>
                 <div class="container" id="header-container"></div>
                 <div class="container" id="content-container">
