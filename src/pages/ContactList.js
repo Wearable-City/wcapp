@@ -9,10 +9,15 @@ import {
     Modal,
     Input,
     Row,
-    Col
+    Col,
 } from "antd";
 
-import { IdcardOutlined, PhoneOutlined, MessageOutlined, RightOutlined } from '@ant-design/icons';
+import {
+    IdcardOutlined,
+    PhoneOutlined,
+    MessageOutlined,
+    RightOutlined,
+} from "@ant-design/icons";
 
 import "antd/dist/antd.css";
 
@@ -27,16 +32,24 @@ const deleteNotification = (id) => {
     message.warning(id + " has been deleted");
 };
 
+const saveSuccessNotification = () => {
+    message.success("Data has been saved!");
+};
+
+const saveFailedNotification = (err) => {
+    message.error("Saving data failed 😞 Please try again!");
+    console.error(err);
+};
+
 const editNotification = (id) => {
-    message.warning(id + ' has been updated');
+    message.warning(id + " has been updated");
 };
 
 const createNotification = (id) => {
-    message.warning(id + ' has been added');
+    message.warning(id + " has been added");
 };
 
 class ContactList extends React.Component {
-
     constructor(props) {
         super(props);
 
@@ -63,41 +76,53 @@ class ContactList extends React.Component {
                 title: "Contact First Name",
                 dataIndex: "firstName",
                 key: "id" + "firstName",
+                editable: true,
             },
 
             {
                 title: "Contact Last Name",
                 dataIndex: "lastName",
                 key: "id" + "lastName",
+                editable: true,
             },
             {
                 title: "Contact Phone Number",
                 dataIndex: "phoneNumber",
                 key: "id" + "phoneNumber",
+                editable: true,
             },
             {
                 title: "Alert Message",
                 dataIndex: "alertMessage",
                 key: "id" + "alertMessage",
+                editable: true,
             },
             {
-                title: '',
-                dataIndex: 'operation',
-                render: (_: any, record: Item) => {
+                title: "",
+                dataIndex: "operation",
+                render: (_, record) => {
                     return this.state.isEditing ? (
                         <span>
-                            <a href="javascript:;" onClick={() => this.onSave(record.id)} style={{ marginRight: 8 }}>
-                                Save
-                            </a>
-                            <Popconfirm title="Sure to cancel?" onConfirm={this.onSave(record.id)} >
+                            <Button
+                                type="li"
+                                onClick={() => this.onSave(record.id)}
+                                style={{ marginRight: 8 }}
+                            >
+                                Save{" "}
+                            </Button>
+
+                            <Popconfirm
+                                title="Sure to cancel?"
+                                onConfirm={this.onSave(record.id)}
+                            >
                                 <a>Cancel</a>
                             </Popconfirm>
                         </span>
                     ) : (
-                            <a href="javascript:;" onClick={() => this.toggleEdit()}>
-                                Edit
-                            </a>
-                        );
+                        <Button type="link" onClick={() => this.toggleEdit()}>
+                            Edit
+                        </Button>
+                    );
                 },
             },
             {
@@ -122,11 +147,10 @@ class ContactList extends React.Component {
                             });
                         }}
                     >
-                        <a href="javascript:;">Delete</a>
+                        <Button type="link">Delete</Button>
                     </Popconfirm>
                 ),
             },
-
         ];
 
         this.toggleEdit = this.toggleEdit.bind(this);
@@ -140,7 +164,7 @@ class ContactList extends React.Component {
         console.log(this.state.isEditing);
         this.setState({ isEditing: true });
         console.log(this.state.isEditing);
-    }
+    };
 
     onDelete = (id) => {
         deleteNotification(id);
@@ -148,10 +172,10 @@ class ContactList extends React.Component {
 
     onSave = (id) => {
         this.setState({ isEditing: false });
-    }
+    };
 
     toggleModal = () => {
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             showAddModal: !prevState.showAddModal,
             id: "",
             firstName: "",
@@ -159,7 +183,7 @@ class ContactList extends React.Component {
             phoneNumber: "",
             alertMessage: "",
         }));
-    }
+    };
 
     onAdd = () => {
         let contacts = this.state.user.contacts;
@@ -170,40 +194,16 @@ class ContactList extends React.Component {
             phoneNumber: this.state.phoneNumber,
             alertMessage: this.state.alertMessage,
         };
-        contacts = [...contacts, newContact]
-        contacts = { contacts };
-        UPDATE_URL.searchParams.set("ref", this.state.ref);
-        fetch(UPDATE_URL.href, {
-            mode: "cors",
-            method: 'POST',
-            body: JSON.stringify(contacts)
-        })
-            .then((response) => response.json())
-            .then((output) =>
-                this.setState({
-                    user: output.data
-                }))
+        let newContacts = [...contacts, newContact];
+        this.setState({ user: { contacts: newContacts } });
         this.toggleModal();
         createNotification(newContact.firstName + " " + newContact.lastName);
-
     };
 
     deleteAll = () => {
-        let contacts = [];
-        contacts = { contacts };
-        UPDATE_URL.searchParams.set("ref", this.state.ref);
-        fetch(UPDATE_URL.href, {
-            mode: "cors",
-            method: 'POST',
-            body: JSON.stringify(contacts)
-        })
-            .then((response) => response.json())
-            .then((output) =>
-                this.setState({
-                    user: output.data
-                }))
+        this.setState({ user: { contacts: [] } });
         message.warning("All contacts have been deleted");
-    }
+    };
 
     fetchData = () => {
         fetch(
@@ -217,7 +217,8 @@ class ContactList extends React.Component {
                     ref: output[0].ref["@ref"].id,
                     loaded: true,
                 })
-            ).then(() => console.log(this.state.user.contacts));
+            )
+            .then(() => console.log(this.state.user.contacts));
     };
 
     onChangeString(e) {
@@ -230,7 +231,15 @@ class ContactList extends React.Component {
             mode: "cors",
             body: JSON.stringify(this.state.user),
             method: "POST",
-        }).catch((e) => console.error(e));
+        })
+            .then((res) => {
+                if (res.ok) {
+                    saveSuccessNotification();
+                }
+            })
+            .catch((err) => {
+                saveFailedNotification(err);
+            });
     };
 
     componentDidMount = () => {
@@ -246,9 +255,9 @@ class ContactList extends React.Component {
         return (
             <div>
                 <Title level={2} style={{ textAlign: "center", padding: "1em" }}>
-                    {" "}Contact List{" "}
+                    {" "}
+                    Contact List{" "}
                 </Title>
-
 
                 <Table
                     columns={this.columns}
@@ -256,14 +265,27 @@ class ContactList extends React.Component {
                     dataSource={!this.state.loaded ? [] : this.state.user.contacts}
                 />
                 <div style={{ marginLeft: "2.5em", marginTop: "1.5em" }}>
-                    <Button onClick={this.toggleModal} type="primary" style={{ float: "left", marginRight: "2em" }}>
+                    <Button
+                        onClick={this.toggleModal}
+                        type="primary"
+                        style={{ float: "left", marginRight: "2em" }}
+                    >
                         Add Contact
                     </Button>
-                    <Button type="primary" onClick={this.syncData} style={{ float: "left" }}>
+                    <Button
+                        type="primary"
+                        onClick={this.syncData}
+                        style={{ float: "left" }}
+                    >
                         Save
                     </Button>
 
-                    <Button danger type="secondary" onClick={this.deleteAll} style={{ float: "left", marginLeft: "2em" }}>
+                    <Button
+                        danger
+                        type="secondary"
+                        onClick={this.deleteAll}
+                        style={{ float: "left", marginLeft: "2em" }}
+                    >
                         Delete All
                     </Button>
                 </div>
@@ -279,7 +301,12 @@ class ContactList extends React.Component {
                             <Button key="back" onClick={this.toggleModal}>
                                 Cancel
                             </Button>,
-                            <Button key="submit" type="primary" loading={this.state.modalIsLoading} onClick={this.onAdd}>
+                            <Button
+                                key="submit"
+                                type="primary"
+                                loading={this.state.modalIsLoading}
+                                onClick={this.onAdd}
+                            >
                                 Submit
                             </Button>,
                         ]}
@@ -311,7 +338,11 @@ class ContactList extends React.Component {
                                             size="large"
                                             prefix={
                                                 <Tooltip title="Cannot have special characters">
-                                                    <RightOutlined style={{ color: 'rgba(0,0,0,.65)' }} />
+                                                    <RightOutlined
+                                                        style={{
+                                                            color: "rgba(0,0,0,.65)",
+                                                        }}
+                                                    />
                                                 </Tooltip>
                                             }
                                             style={{ marginTop: "3.9%" }}
@@ -327,7 +358,11 @@ class ContactList extends React.Component {
                                             size="large"
                                             prefix={
                                                 <Tooltip title="Cannot have special characters">
-                                                    <RightOutlined style={{ color: 'rgba(0,0,0,.65)' }} />
+                                                    <RightOutlined
+                                                        style={{
+                                                            color: "rgba(0,0,0,.65)",
+                                                        }}
+                                                    />
                                                 </Tooltip>
                                             }
                                             style={{ marginTop: "3.9%" }}
@@ -344,7 +379,9 @@ class ContactList extends React.Component {
                                     size="large"
                                     prefix={
                                         <Tooltip title="Can only have Numeric Characters">
-                                            <PhoneOutlined style={{ color: 'rgba(0,0,0,.65)' }} />
+                                            <PhoneOutlined
+                                                style={{ color: "rgba(0,0,0,.65)" }}
+                                            />
                                         </Tooltip>
                                     }
                                     style={{ marginTop: "3.9%" }}
@@ -360,7 +397,9 @@ class ContactList extends React.Component {
                                     size="large"
                                     prefix={
                                         <Tooltip title="Customize your message to your liking!">
-                                            <MessageOutlined style={{ color: 'rgba(0,0,0,.65)' }} />
+                                            <MessageOutlined
+                                                style={{ color: "rgba(0,0,0,.65)" }}
+                                            />
                                         </Tooltip>
                                     }
                                     style={{ marginTop: "5%" }}
