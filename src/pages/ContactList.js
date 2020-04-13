@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import "antd/dist/antd.css";
 import {
     Table,
     Typography,
@@ -19,35 +20,17 @@ import {
     RightOutlined,
 } from "@ant-design/icons";
 
-import "antd/dist/antd.css";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 const { TextArea } = Input;
 
-const UPDATE_URL = new URL(
-    "https://wearablecity.netlify.com/.netlify/functions/users-edit-data"
-);
+const UPDATE_URL = new URL("https://wearablecity.netlify.com/.netlify/functions/users-edit-data");
 
-const deleteNotification = (id) => {
-    message.warning(id + " has been deleted");
-};
-
-const saveSuccessNotification = () => {
-    message.success("Data has been saved!");
-};
-
-const saveFailedNotification = (err) => {
-    message.error("Saving data failed 😞 Please try again!");
-    console.error(err);
-};
-
-const editNotification = (id) => {
-    message.warning(id + " has been updated");
-};
-
-const createNotification = (id) => {
-    message.warning(id + " has been added");
-};
+const deleteNotification = (id) => { message.warning(id + " has been deleted"); };
+const saveSuccessNotification = () => { message.success("Data has been saved!"); };
+const saveFailedNotification = (err) => { message.error("Saving data failed 😞 Please try again!"); console.error(err); };
+const editNotification = (id) => { message.warning(id + " has been updated"); };
+const createNotification = (id) => { message.success(id + " has been added"); };
 
 class ContactList extends React.Component {
     constructor(props) {
@@ -57,7 +40,8 @@ class ContactList extends React.Component {
             ref: undefined,
             user: undefined,
 
-            //Add Contact Stuff
+            //Add/Edit Contact Stuff
+            showEditModal: false,
             showAddModal: false,
             modalIsLoading: false,
             id: "",
@@ -68,7 +52,6 @@ class ContactList extends React.Component {
             //End of Add Contact Stuff
 
             loaded: false,
-            isEditing: true,
         };
 
         this.columns = [
@@ -100,30 +83,13 @@ class ContactList extends React.Component {
             {
                 title: "",
                 dataIndex: "operation",
-                render: (_, record) => {
-                    return this.state.isEditing ? (
-                        <span>
-                            <Button
-                                type="li"
-                                onClick={() => this.onSave(record.id)}
-                                style={{ marginRight: 8 }}
-                            >
-                                Save{" "}
-                            </Button>
+                render: (text, record, index) => (
 
-                            <Popconfirm
-                                title="Sure to cancel?"
-                                onConfirm={this.onSave(record.id)}
-                            >
-                                <a>Cancel</a>
-                            </Popconfirm>
-                        </span>
-                    ) : (
-                        <Button type="link" onClick={() => this.toggleEdit()}>
-                            Edit
-                        </Button>
-                    );
-                },
+                    <Button type="link" onClick={() => this.toggleEditModal()}>
+                        Edit
+                    </Button>
+
+                )
             },
             {
                 title: "",
@@ -147,25 +113,17 @@ class ContactList extends React.Component {
                             });
                         }}
                     >
-                        <Button type="link">Delete</Button>
+                        <Button type="link" danger>Delete</Button>
                     </Popconfirm>
                 ),
             },
         ];
 
-        this.toggleEdit = this.toggleEdit.bind(this);
         this.onSave = this.onSave.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onAdd = this.onAdd.bind(this);
         this.onChangeString = this.onChangeString.bind(this);
     }
-
-    toggleEdit = () => {
-        console.log(this.state.isEditing);
-        this.setState({ isEditing: true });
-        console.log(this.state.isEditing);
-    };
-
     onDelete = (id) => {
         deleteNotification(id);
     };
@@ -252,6 +210,7 @@ class ContactList extends React.Component {
     };
 
     render() {
+
         return (
             <div>
                 <Title level={2} style={{ textAlign: "center", padding: "1em" }}>
@@ -268,7 +227,7 @@ class ContactList extends React.Component {
                     <Button
                         onClick={this.toggleModal}
                         type="primary"
-                        style={{ float: "left", marginRight: "2em" }}
+                        style={{ float: "left", marginRight: "1em" }}
                     >
                         Add Contact
                     </Button>
@@ -284,7 +243,7 @@ class ContactList extends React.Component {
                         danger
                         type="secondary"
                         onClick={this.deleteAll}
-                        style={{ float: "left", marginLeft: "2em" }}
+                        style={{ float: "left", marginLeft: "4em" }}
                     >
                         Delete All
                     </Button>
@@ -312,7 +271,7 @@ class ContactList extends React.Component {
                         ]}
                     >
                         <div style={{ textAlign: "center" }}>
-                            <Title level={3}> Input Contact Details </Title>
+                            <Title level={3}> Contact Details </Title>
                             <div>
                                 <Input
                                     placeholder="Contact ID"
