@@ -85,7 +85,7 @@ class ContactList extends React.Component {
                 dataIndex: "operation",
                 render: (text, record, index) => (
 
-                    <Button type="link" onClick={() => this.toggleEditModal()}>
+                    <Button type="link" onClick={() => this.toggleEditModal(true, record)}>
                         Edit
                     </Button>
 
@@ -119,20 +119,39 @@ class ContactList extends React.Component {
             },
         ];
 
-        this.onSave = this.onSave.bind(this);
-        this.onDelete = this.onDelete.bind(this);
+        this.onEditSubmit = this.onEditSubmit.bind(this);
         this.onAdd = this.onAdd.bind(this);
         this.onChangeString = this.onChangeString.bind(this);
+        this.toggleEditModal = this.toggleEditModal.bind(this);
     }
-    onDelete = (id) => {
-        deleteNotification(id);
+    onEditSubmit = (id, fn, ln, pn, am) => {
+        let contacts = this.state.user.contacts;
+        console.log(contacts)
+
+        for (var i = 0; i < contacts.length; i++) {
+            var contact = contacts[i];
+            if (contact.id == id) {
+
+                contact.firstName = fn;
+                contact.lastName = ln;
+                contact.phoneNumber = pn;
+                contact.alertMessage = am;
+                console.log(contact)
+            }
+        }
+
+        this.setState({
+            user: {
+                contacts: contacts
+            },
+            showEditModal: false
+        });
+
+        editNotification("update", "update");
+
     };
 
-    onSave = (id) => {
-        this.setState({ isEditing: false });
-    };
-
-    toggleModal = () => {
+    toggleAddModal = () => {
         this.setState((prevState) => ({
             showAddModal: !prevState.showAddModal,
             id: "",
@@ -141,6 +160,28 @@ class ContactList extends React.Component {
             phoneNumber: "",
             alertMessage: "",
         }));
+    };
+
+    toggleEditModal = (editMode, editRecord) => {
+        if (editMode) {
+            this.setState((prevState) => ({
+                showEditModal: !prevState.showEditModal,
+                id: editRecord.id,
+                firstName: editRecord.firstName,
+                lastName: editRecord.lastName,
+                phoneNumber: editRecord.phoneNumber,
+                alertMessage: editRecord.alertMessage,
+            }));
+        } else {
+            this.setState((prevState) => ({
+                showEditModal: !prevState.showEditModal,
+                id: "",
+                firstName: "",
+                lastName: "",
+                phoneNumber: "",
+                alertMessage: "",
+            }));
+        }
     };
 
     onAdd = () => {
@@ -154,7 +195,7 @@ class ContactList extends React.Component {
         };
         let newContacts = [...contacts, newContact];
         this.setState({ user: { contacts: newContacts } });
-        this.toggleModal();
+        this.toggleAddModal();
         createNotification(newContact.firstName + " " + newContact.lastName);
     };
 
@@ -225,7 +266,7 @@ class ContactList extends React.Component {
                 />
                 <div style={{ marginLeft: "2.5em", marginTop: "1.5em" }}>
                     <Button
-                        onClick={this.toggleModal}
+                        onClick={this.toggleAddModal}
                         type="primary"
                         style={{ float: "left", marginRight: "1em" }}
                     >
@@ -254,10 +295,9 @@ class ContactList extends React.Component {
                         centered
                         visible={this.state.showAddModal}
                         title={"Creating New Emergency Contact"}
-                        onOk={this.onSave}
-                        onCancel={this.toggleModal}
+                        onCancel={this.toggleAddModal}
                         footer={[
-                            <Button key="back" onClick={this.toggleModal}>
+                            <Button key="back" onClick={this.toggleAddModal}>
                                 Cancel
                             </Button>,
                             <Button
@@ -274,6 +314,125 @@ class ContactList extends React.Component {
                             <Title level={3}> Contact Details </Title>
                             <div>
                                 <Input
+                                    placeholder="Contact ID"
+                                    id="id"
+                                    value={this.state.id}
+                                    onChange={this.onChangeString}
+                                    size="large"
+                                    prefix={
+                                        <Tooltip title="CHAR 64, Cannot be left empty">
+                                            <IdcardOutlined />
+                                        </Tooltip>
+                                    }
+                                />
+
+                                <Row>
+                                    <Col span={12}>
+                                        <Input
+                                            allowClear
+                                            placeholder="First Name"
+                                            id="firstName"
+                                            value={this.state.firstName}
+                                            onChange={this.onChangeString}
+                                            size="large"
+                                            prefix={
+                                                <Tooltip title="Cannot have special characters">
+                                                    <RightOutlined
+                                                        style={{
+                                                            color: "rgba(0,0,0,.65)",
+                                                        }}
+                                                    />
+                                                </Tooltip>
+                                            }
+                                            style={{ marginTop: "3.9%" }}
+                                        />
+                                    </Col>
+                                    <Col span={12}>
+                                        <Input
+                                            allowClear
+                                            placeholder="Last Name"
+                                            id="lastName"
+                                            value={this.state.lastName}
+                                            onChange={this.onChangeString}
+                                            size="large"
+                                            prefix={
+                                                <Tooltip title="Cannot have special characters">
+                                                    <RightOutlined
+                                                        style={{
+                                                            color: "rgba(0,0,0,.65)",
+                                                        }}
+                                                    />
+                                                </Tooltip>
+                                            }
+                                            style={{ marginTop: "3.9%" }}
+                                        />
+                                    </Col>
+                                </Row>
+
+                                <Input
+                                    allowClear
+                                    placeholder="Contact Phone Number"
+                                    id="phoneNumber"
+                                    value={this.state.phoneNumber}
+                                    onChange={this.onChangeString}
+                                    size="large"
+                                    prefix={
+                                        <Tooltip title="Can only have Numeric Characters">
+                                            <PhoneOutlined
+                                                style={{ color: "rgba(0,0,0,.65)" }}
+                                            />
+                                        </Tooltip>
+                                    }
+                                    style={{ marginTop: "3.9%" }}
+                                />
+
+                                <TextArea
+                                    rows={4}
+                                    allowClear
+                                    placeholder="Alert Message"
+                                    id="alertMessage"
+                                    value={this.state.alertMessage}
+                                    onChange={this.onChangeString}
+                                    size="large"
+                                    prefix={
+                                        <Tooltip title="Customize your message to your liking!">
+                                            <MessageOutlined
+                                                style={{ color: "rgba(0,0,0,.65)" }}
+                                            />
+                                        </Tooltip>
+                                    }
+                                    style={{ marginTop: "5%" }}
+                                />
+                                <br />
+                            </div>
+                        </div>
+                    </Modal>
+                </div>
+                <div>
+                    <Modal
+                        centered
+                        visible={this.state.showEditModal}
+                        title={"Editting Emergency Contact"}
+                        onCancel={() => this.toggleEditModal(false)}
+                        footer={[
+                            <Button key="back" onClick={() => this.toggleEditModal(false)}>
+                                Cancel
+                            </Button>,
+                            <Button
+                                key="submit"
+                                type="primary"
+                                loading={this.state.modalIsLoading}
+                                onClick={() => this.onEditSubmit(this.state.id, this.state.firstName, this.state.lastName, this.state.phoneNumber, this.state.alertMessage)}
+                            >
+                                Submit
+                            </Button>,
+                        ]}
+                    >
+                        <div style={{ textAlign: "center" }}>
+                            <Title level={3}> Contact Details </Title>
+                            <div>
+                                <Input
+                                    disabled
                                     placeholder="Contact ID"
                                     id="id"
                                     value={this.state.id}
