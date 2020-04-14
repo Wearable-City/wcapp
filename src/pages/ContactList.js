@@ -11,6 +11,7 @@ import {
     Input,
     Row,
     Col,
+    PageHeader,
 } from "antd";
 
 import {
@@ -19,6 +20,7 @@ import {
     MessageOutlined,
     RightOutlined,
 } from "@ant-design/icons";
+import { Redirect } from "react-router-dom";
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -58,6 +60,8 @@ class ContactList extends React.Component {
             lastName: "",
             phoneNumber: "",
             alertMessage: "",
+            goingBack: false,
+            loggedOut: false,
             //End of Add Contact Stuff
 
             loaded: false,
@@ -260,301 +264,330 @@ class ContactList extends React.Component {
         console.log("componentDidUpdate");
     };
 
+    onBackPressed = () => {
+        this.setState({ goingBack: true });
+    };
+
+    onLogout = () => {
+        localStorage.removeItem("auth_token");
+        this.setState({ loggedOut: true });
+        // window.location.href = "/";
+        window.location.reload();
+    };
+
     render() {
-        return (
-            <div>
-                <Title level={2} style={{ textAlign: "center", padding: "1em" }}>
-                    {" "}
-                    Contact List{" "}
-                </Title>
-
-                <Table
-                    columns={this.columns}
-                    loading={!this.state.loaded}
-                    dataSource={!this.state.loaded ? [] : this.state.user.contacts}
-                />
-                <div style={{ marginLeft: "2.5em", marginTop: "1.5em" }}>
-                    <Button
-                        onClick={this.toggleAddModal}
-                        type="primary"
-                        style={{ float: "left", marginRight: "1em" }}
-                    >
-                        Add Contact
-                    </Button>
-                    <Button
-                        type="primary"
-                        onClick={this.syncData}
-                        style={{ float: "left" }}
-                    >
-                        Save
-                    </Button>
-
-                    <Popconfirm
-                        title="Sure to delete all?"
-                        okType="danger"
-                        onConfirm={this.deleteAll}
-                    >
+        if (!this.state.goingBack) {
+            return (
+                <div>
+                    <PageHeader
+                        className="site-page-header"
+                        onBack={this.onBackPressed}
+                        title="Settings"
+                        subTitle="Edit your contacts and more."
+                        extra={[
+                            <Button key="3" onClick={this.onLogout}>
+                                Logout
+                            </Button>,
+                        ]}
+                    />
+                    ,
+                    <Title level={2} style={{ textAlign: "center", padding: "1em" }}>
+                        {" "}
+                        Contact List{" "}
+                    </Title>
+                    <Table
+                        columns={this.columns}
+                        loading={!this.state.loaded}
+                        dataSource={!this.state.loaded ? [] : this.state.user.contacts}
+                    />
+                    <div style={{ marginLeft: "2.5em", marginTop: "1.5em" }}>
                         <Button
-                            danger
-                            type="secondary"
-                            // onClick={this.deleteAll}
-                            style={{ float: "left", marginLeft: "4em" }}
+                            onClick={this.toggleAddModal}
+                            type="primary"
+                            style={{ float: "left", marginRight: "1em" }}
                         >
-                            Delete All
+                            Add Contact
                         </Button>
-                    </Popconfirm>
-                </div>
+                        <Button
+                            type="primary"
+                            onClick={this.syncData}
+                            style={{ float: "left" }}
+                        >
+                            Save
+                        </Button>
 
-                <div>
-                    <Modal
-                        centered
-                        visible={this.state.showAddModal}
-                        title={"Creating New Emergency Contact"}
-                        onCancel={this.toggleAddModal}
-                        footer={[
-                            <Button key="back" onClick={this.toggleAddModal}>
-                                Cancel
-                            </Button>,
+                        <Popconfirm
+                            title="Sure to delete all?"
+                            okType="danger"
+                            onConfirm={this.deleteAll}
+                        >
                             <Button
-                                key="submit"
-                                type="primary"
-                                loading={this.state.modalIsLoading}
-                                onClick={this.onAdd}
+                                danger
+                                type="secondary"
+                                // onClick={this.deleteAll}
+                                style={{ float: "left", marginLeft: "4em" }}
                             >
-                                Submit
-                            </Button>,
-                        ]}
-                    >
-                        <div style={{ textAlign: "center" }}>
-                            <Title level={3}> Contact Details </Title>
-                            <div>
-                                <Input
-                                    placeholder="Contact ID"
-                                    id="id"
-                                    value={this.state.id}
-                                    onChange={this.onChangeString}
-                                    size="large"
-                                    prefix={
-                                        <Tooltip title="CHAR 64, Cannot be left empty">
-                                            <IdcardOutlined />
-                                        </Tooltip>
-                                    }
-                                />
+                                Delete All
+                            </Button>
+                        </Popconfirm>
+                    </div>
+                    <div>
+                        <Modal
+                            centered
+                            visible={this.state.showAddModal}
+                            title={"Creating New Emergency Contact"}
+                            onCancel={this.toggleAddModal}
+                            footer={[
+                                <Button key="back" onClick={this.toggleAddModal}>
+                                    Cancel
+                                </Button>,
+                                <Button
+                                    key="submit"
+                                    type="primary"
+                                    loading={this.state.modalIsLoading}
+                                    onClick={this.onAdd}
+                                >
+                                    Submit
+                                </Button>,
+                            ]}
+                        >
+                            <div style={{ textAlign: "center" }}>
+                                <Title level={3}> Contact Details </Title>
+                                <div>
+                                    <Input
+                                        placeholder="Contact ID"
+                                        id="id"
+                                        value={this.state.id}
+                                        onChange={this.onChangeString}
+                                        size="large"
+                                        prefix={
+                                            <Tooltip title="CHAR 64, Cannot be left empty">
+                                                <IdcardOutlined />
+                                            </Tooltip>
+                                        }
+                                    />
 
-                                <Row>
-                                    <Col span={12}>
-                                        <Input
-                                            allowClear
-                                            placeholder="First Name"
-                                            id="firstName"
-                                            value={this.state.firstName}
-                                            onChange={this.onChangeString}
-                                            size="large"
-                                            prefix={
-                                                <Tooltip title="Cannot have special characters">
-                                                    <RightOutlined
-                                                        style={{
-                                                            color: "rgba(0,0,0,.65)",
-                                                        }}
-                                                    />
-                                                </Tooltip>
-                                            }
-                                            style={{ marginTop: "3.9%" }}
-                                        />
-                                    </Col>
-                                    <Col span={12}>
-                                        <Input
-                                            allowClear
-                                            placeholder="Last Name"
-                                            id="lastName"
-                                            value={this.state.lastName}
-                                            onChange={this.onChangeString}
-                                            size="large"
-                                            prefix={
-                                                <Tooltip title="Cannot have special characters">
-                                                    <RightOutlined
-                                                        style={{
-                                                            color: "rgba(0,0,0,.65)",
-                                                        }}
-                                                    />
-                                                </Tooltip>
-                                            }
-                                            style={{ marginTop: "3.9%" }}
-                                        />
-                                    </Col>
-                                </Row>
-
-                                <Input
-                                    allowClear
-                                    placeholder="Contact Phone Number"
-                                    id="phoneNumber"
-                                    value={this.state.phoneNumber}
-                                    onChange={this.onChangeString}
-                                    size="large"
-                                    prefix={
-                                        <Tooltip title="Can only have Numeric Characters">
-                                            <PhoneOutlined
-                                                style={{ color: "rgba(0,0,0,.65)" }}
+                                    <Row>
+                                        <Col span={12}>
+                                            <Input
+                                                allowClear
+                                                placeholder="First Name"
+                                                id="firstName"
+                                                value={this.state.firstName}
+                                                onChange={this.onChangeString}
+                                                size="large"
+                                                prefix={
+                                                    <Tooltip title="Cannot have special characters">
+                                                        <RightOutlined
+                                                            style={{
+                                                                color:
+                                                                    "rgba(0,0,0,.65)",
+                                                            }}
+                                                        />
+                                                    </Tooltip>
+                                                }
+                                                style={{ marginTop: "3.9%" }}
                                             />
-                                        </Tooltip>
-                                    }
-                                    style={{ marginTop: "3.9%" }}
-                                />
-
-                                <TextArea
-                                    rows={4}
-                                    allowClear
-                                    placeholder="Alert Message"
-                                    id="alertMessage"
-                                    value={this.state.alertMessage}
-                                    onChange={this.onChangeString}
-                                    size="large"
-                                    prefix={
-                                        <Tooltip title="Customize your message to your liking!">
-                                            <MessageOutlined
-                                                style={{ color: "rgba(0,0,0,.65)" }}
+                                        </Col>
+                                        <Col span={12}>
+                                            <Input
+                                                allowClear
+                                                placeholder="Last Name"
+                                                id="lastName"
+                                                value={this.state.lastName}
+                                                onChange={this.onChangeString}
+                                                size="large"
+                                                prefix={
+                                                    <Tooltip title="Cannot have special characters">
+                                                        <RightOutlined
+                                                            style={{
+                                                                color:
+                                                                    "rgba(0,0,0,.65)",
+                                                            }}
+                                                        />
+                                                    </Tooltip>
+                                                }
+                                                style={{ marginTop: "3.9%" }}
                                             />
-                                        </Tooltip>
-                                    }
-                                    style={{ marginTop: "5%" }}
-                                />
-                                <br />
+                                        </Col>
+                                    </Row>
+
+                                    <Input
+                                        allowClear
+                                        placeholder="Contact Phone Number"
+                                        id="phoneNumber"
+                                        value={this.state.phoneNumber}
+                                        onChange={this.onChangeString}
+                                        size="large"
+                                        prefix={
+                                            <Tooltip title="Can only have Numeric Characters">
+                                                <PhoneOutlined
+                                                    style={{ color: "rgba(0,0,0,.65)" }}
+                                                />
+                                            </Tooltip>
+                                        }
+                                        style={{ marginTop: "3.9%" }}
+                                    />
+
+                                    <TextArea
+                                        rows={4}
+                                        allowClear
+                                        placeholder="Alert Message"
+                                        id="alertMessage"
+                                        value={this.state.alertMessage}
+                                        onChange={this.onChangeString}
+                                        size="large"
+                                        prefix={
+                                            <Tooltip title="Customize your message to your liking!">
+                                                <MessageOutlined
+                                                    style={{ color: "rgba(0,0,0,.65)" }}
+                                                />
+                                            </Tooltip>
+                                        }
+                                        style={{ marginTop: "5%" }}
+                                    />
+                                    <br />
+                                </div>
                             </div>
-                        </div>
-                    </Modal>
-                </div>
-                <div>
-                    <Modal
-                        centered
-                        visible={this.state.showEditModal}
-                        title={"Editting Emergency Contact"}
-                        onCancel={() => this.toggleEditModal(false)}
-                        footer={[
-                            <Button
-                                key="back"
-                                onClick={() => this.toggleEditModal(false)}
-                            >
-                                Cancel
-                            </Button>,
-                            <Button
-                                key="submit"
-                                type="primary"
-                                loading={this.state.modalIsLoading}
-                                onClick={() =>
-                                    this.onEditSubmit(
-                                        this.state.id,
-                                        this.state.firstName,
-                                        this.state.lastName,
-                                        this.state.phoneNumber,
-                                        this.state.alertMessage
-                                    )
-                                }
-                            >
-                                Submit
-                            </Button>,
-                        ]}
-                    >
-                        <div style={{ textAlign: "center" }}>
-                            <Title level={3}> Contact Details </Title>
-                            <div>
-                                <Input
-                                    disabled
-                                    placeholder="Contact ID"
-                                    id="id"
-                                    value={this.state.id}
-                                    onChange={this.onChangeString}
-                                    size="large"
-                                    prefix={
-                                        <Tooltip title="CHAR 64, Cannot be left empty">
-                                            <IdcardOutlined />
-                                        </Tooltip>
+                        </Modal>
+                    </div>
+                    <div>
+                        <Modal
+                            centered
+                            visible={this.state.showEditModal}
+                            title={"Editting Emergency Contact"}
+                            onCancel={() => this.toggleEditModal(false)}
+                            footer={[
+                                <Button
+                                    key="back"
+                                    onClick={() => this.toggleEditModal(false)}
+                                >
+                                    Cancel
+                                </Button>,
+                                <Button
+                                    key="submit"
+                                    type="primary"
+                                    loading={this.state.modalIsLoading}
+                                    onClick={() =>
+                                        this.onEditSubmit(
+                                            this.state.id,
+                                            this.state.firstName,
+                                            this.state.lastName,
+                                            this.state.phoneNumber,
+                                            this.state.alertMessage
+                                        )
                                     }
-                                />
+                                >
+                                    Submit
+                                </Button>,
+                            ]}
+                        >
+                            <div style={{ textAlign: "center" }}>
+                                <Title level={3}> Contact Details </Title>
+                                <div>
+                                    <Input
+                                        disabled
+                                        placeholder="Contact ID"
+                                        id="id"
+                                        value={this.state.id}
+                                        onChange={this.onChangeString}
+                                        size="large"
+                                        prefix={
+                                            <Tooltip title="CHAR 64, Cannot be left empty">
+                                                <IdcardOutlined />
+                                            </Tooltip>
+                                        }
+                                    />
 
-                                <Row>
-                                    <Col span={12}>
-                                        <Input
-                                            allowClear
-                                            placeholder="First Name"
-                                            id="firstName"
-                                            value={this.state.firstName}
-                                            onChange={this.onChangeString}
-                                            size="large"
-                                            prefix={
-                                                <Tooltip title="Cannot have special characters">
-                                                    <RightOutlined
-                                                        style={{
-                                                            color: "rgba(0,0,0,.65)",
-                                                        }}
-                                                    />
-                                                </Tooltip>
-                                            }
-                                            style={{ marginTop: "3.9%" }}
-                                        />
-                                    </Col>
-                                    <Col span={12}>
-                                        <Input
-                                            allowClear
-                                            placeholder="Last Name"
-                                            id="lastName"
-                                            value={this.state.lastName}
-                                            onChange={this.onChangeString}
-                                            size="large"
-                                            prefix={
-                                                <Tooltip title="Cannot have special characters">
-                                                    <RightOutlined
-                                                        style={{
-                                                            color: "rgba(0,0,0,.65)",
-                                                        }}
-                                                    />
-                                                </Tooltip>
-                                            }
-                                            style={{ marginTop: "3.9%" }}
-                                        />
-                                    </Col>
-                                </Row>
-
-                                <Input
-                                    allowClear
-                                    placeholder="Contact Phone Number"
-                                    id="phoneNumber"
-                                    value={this.state.phoneNumber}
-                                    onChange={this.onChangeString}
-                                    size="large"
-                                    prefix={
-                                        <Tooltip title="Can only have Numeric Characters">
-                                            <PhoneOutlined
-                                                style={{ color: "rgba(0,0,0,.65)" }}
+                                    <Row>
+                                        <Col span={12}>
+                                            <Input
+                                                allowClear
+                                                placeholder="First Name"
+                                                id="firstName"
+                                                value={this.state.firstName}
+                                                onChange={this.onChangeString}
+                                                size="large"
+                                                prefix={
+                                                    <Tooltip title="Cannot have special characters">
+                                                        <RightOutlined
+                                                            style={{
+                                                                color:
+                                                                    "rgba(0,0,0,.65)",
+                                                            }}
+                                                        />
+                                                    </Tooltip>
+                                                }
+                                                style={{ marginTop: "3.9%" }}
                                             />
-                                        </Tooltip>
-                                    }
-                                    style={{ marginTop: "3.9%" }}
-                                />
-
-                                <TextArea
-                                    rows={4}
-                                    allowClear
-                                    placeholder="Alert Message"
-                                    id="alertMessage"
-                                    value={this.state.alertMessage}
-                                    onChange={this.onChangeString}
-                                    size="large"
-                                    prefix={
-                                        <Tooltip title="Customize your message to your liking!">
-                                            <MessageOutlined
-                                                style={{ color: "rgba(0,0,0,.65)" }}
+                                        </Col>
+                                        <Col span={12}>
+                                            <Input
+                                                allowClear
+                                                placeholder="Last Name"
+                                                id="lastName"
+                                                value={this.state.lastName}
+                                                onChange={this.onChangeString}
+                                                size="large"
+                                                prefix={
+                                                    <Tooltip title="Cannot have special characters">
+                                                        <RightOutlined
+                                                            style={{
+                                                                color:
+                                                                    "rgba(0,0,0,.65)",
+                                                            }}
+                                                        />
+                                                    </Tooltip>
+                                                }
+                                                style={{ marginTop: "3.9%" }}
                                             />
-                                        </Tooltip>
-                                    }
-                                    style={{ marginTop: "5%" }}
-                                />
-                                <br />
+                                        </Col>
+                                    </Row>
+
+                                    <Input
+                                        allowClear
+                                        placeholder="Contact Phone Number"
+                                        id="phoneNumber"
+                                        value={this.state.phoneNumber}
+                                        onChange={this.onChangeString}
+                                        size="large"
+                                        prefix={
+                                            <Tooltip title="Can only have Numeric Characters">
+                                                <PhoneOutlined
+                                                    style={{ color: "rgba(0,0,0,.65)" }}
+                                                />
+                                            </Tooltip>
+                                        }
+                                        style={{ marginTop: "3.9%" }}
+                                    />
+
+                                    <TextArea
+                                        rows={4}
+                                        allowClear
+                                        placeholder="Alert Message"
+                                        id="alertMessage"
+                                        value={this.state.alertMessage}
+                                        onChange={this.onChangeString}
+                                        size="large"
+                                        prefix={
+                                            <Tooltip title="Customize your message to your liking!">
+                                                <MessageOutlined
+                                                    style={{ color: "rgba(0,0,0,.65)" }}
+                                                />
+                                            </Tooltip>
+                                        }
+                                        style={{ marginTop: "5%" }}
+                                    />
+                                    <br />
+                                </div>
                             </div>
-                        </div>
-                    </Modal>
+                        </Modal>
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        } else {
+            return <Redirect to="/" />;
+        }
     }
 }
 
