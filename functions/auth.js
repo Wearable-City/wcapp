@@ -23,18 +23,22 @@ exports.handler = (event, context, callback) => {
             });
             // then query the refs
             return client.query(getAllTodoDataQuery).then((ret) => {
+                console.log(ret);
                 if (ret.length === 0) {
+                    console.log("bad usr name");
                     return callback(null, {
                         statusCode: 400,
                         body: { error: "Invalid username" },
                     });
                 }
                 if (ret[0].data.password === sentPassword) {
+                    console.log(ret[0]);
                     return callback(null, {
                         statusCode: 200,
                         body: { token: `${Date.now().toString()}` },
                     });
                 } else {
+                    console.log("bad password");
                     return callback(null, {
                         statusCode: 401,
                         body: {
