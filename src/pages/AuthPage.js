@@ -17,7 +17,7 @@ const tailLayout = {
     },
 };
 
-const AUTH_URL = "";
+const AUTH_URL = "https://wearablecity.netlify.com/.netlify/functions/auth";
 
 const AuthForm = () => {
     const onFinish = (values) => {
@@ -47,7 +47,7 @@ const AuthForm = () => {
         >
             <Form.Item
                 label="Username"
-                name="username"
+                name="userName"
                 rules={[
                     {
                         required: true,
