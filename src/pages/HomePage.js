@@ -138,55 +138,18 @@ class HomePage extends React.Component {
                         <Link to="/settings">
                             <Button type="primary">My Contacts</Button>
                         </Link>,
+
+                        <Button danger type="primary" onClick={this.sendAlert}>
+                            Send Alert
+                        </Button>,
                         <Button key="3" onClick={this.onLogout}>
                             Logout
                         </Button>,
                     ]}
                 />
-                <Button danger type="primary" onClick={this.sendAlert}>
-                    Send Alert
-                </Button>
+
                 <div class="container" id="header-container"></div>
                 <div class="container" id="content-container">
-                    <div
-                        style={{
-                            border: "green",
-                            padding: "50px",
-                            margin: "100px",
-                        }}
-                    >
-                        <form>
-                            <label for="allDevices">All Devices</label>
-                            <input id="allDevices" type="checkbox" />
-                            <input
-                                id="service"
-                                type="text"
-                                size="17"
-                                list="services"
-                                placeholder="Bluetooth Service"
-                            />
-                            <input
-                                id="name"
-                                type="text"
-                                size="17"
-                                placeholder="Device Name"
-                            />
-                            <input
-                                id="namePrefix"
-                                type="text"
-                                size="17"
-                                placeholder="Device Name Prefix"
-                            />
-                        </form>
-                        <Button type="primary" onClick="">
-                            basic info
-                        </Button>
-                        <Button type="primary" onClick={this.getBatteryLevel}>
-                            battery info
-                        </Button>
-                        <p id="devname"></p>
-                        <p id="devbattery"></p>
-                    </div>
                     <div
                         style={{
                             border: "blue",
