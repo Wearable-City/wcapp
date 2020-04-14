@@ -29,6 +29,7 @@ exports.handler = (event, context, callback) => {
                     return callback(null, {
                         statusCode: 400,
                         body: { error: "Invalid username" },
+                        headers: { "Access-Control-Allow-Origin": "*" },
                     });
                 }
                 if (ret[0].data.password === sentPassword) {
@@ -36,6 +37,7 @@ exports.handler = (event, context, callback) => {
                     return callback(null, {
                         statusCode: 200,
                         body: JSON.stringify({ token: `${Date.now().toString()}` }),
+                        headers: { "Access-Control-Allow-Origin": "*" },
                     });
                 } else {
                     console.log("bad password");
@@ -44,6 +46,7 @@ exports.handler = (event, context, callback) => {
                         body: {
                             error: "Invalid password",
                         },
+                        headers: { "Access-Control-Allow-Origin": "*" },
                     });
                 }
             });
