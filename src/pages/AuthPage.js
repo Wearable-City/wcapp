@@ -43,12 +43,6 @@ const AuthPage = (props) => {
     const onFinishFailed = (errorInfo) => {
         console.log("Failed:", errorInfo);
     };
-    const onLogout = () => {
-        localStorage.removeItem("auth_token");
-        this.setState({ loggedOut: true });
-        // window.location.href = "/";
-        window.location.reload();
-    };
 
     return (
         <div>
