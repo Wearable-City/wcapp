@@ -9,7 +9,7 @@ exports.handler = (event, context, callback) => {
     console.log("Function `auth` invoked");
     let data = JSON.parse(event.body);
     console.log(data.userName);
-    let sentPassword = data.userName;
+    let sentPassword = data.password;
     console.log(data.password);
     return client
         .query(q.Paginate(q.Match(q.Index("users_by_username"), data.userName)))
