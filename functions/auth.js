@@ -7,9 +7,10 @@ const client = new faunadb.Client({
 
 exports.handler = (event, context, callback) => {
     console.log("Function `auth` invoked");
-    console.log(event.body.userName);
-    let sentPassword = event.body.userName;
-    console.log(event.body.password);
+    let data = JSON.parse(event.body);
+    console.log(data.userName);
+    let sentPassword = data.userName;
+    console.log(data.password);
     return client
         .query(q.Paginate(q.Match(q.Index("users_by_username"), event.body.userName)))
         .then((response) => {
