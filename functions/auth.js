@@ -32,7 +32,7 @@ exports.handler = (event, context, callback) => {
                 if (ret[0].data.password === sentPassword) {
                     return callback(null, {
                         statusCode: 200,
-                        body: { token: `${ret[0].ref["@ref"].id}` },
+                        body: { token: `${Date.now().toString()}` },
                     });
                 } else {
                     return callback(null, {
