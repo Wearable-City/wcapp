@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "antd";
+import { Button, PageHeader } from "antd";
 import { Link } from "react-router-dom";
 import "antd/dist/antd.css";
 
@@ -98,6 +98,13 @@ class HomePage extends React.Component {
         }
     };
 
+    onLogout = () => {
+        localStorage.removeItem("auth_token");
+        this.setState({ loggedOut: true });
+        // window.location.href = "/";
+        window.location.reload();
+    };
+
     render() {
         return (
             <div>
@@ -123,9 +130,19 @@ class HomePage extends React.Component {
                         description="This is the description"
                     />
                 </Card> */}
-                <Link to="/settings">
-                    <Button type="primary">My Contacts</Button>
-                </Link>
+                <PageHeader
+                    className="site-page-header"
+                    title="Home"
+                    subTitle="Manage your Ring"
+                    extra={[
+                        <Link to="/settings">
+                            <Button type="primary">My Contacts</Button>
+                        </Link>,
+                        <Button key="3" onClick={this.onLogout}>
+                            Logout
+                        </Button>,
+                    ]}
+                />
                 <Button danger type="primary" onClick={this.sendAlert}>
                     Send Alert
                 </Button>
