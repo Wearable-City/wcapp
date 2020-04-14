@@ -40,15 +40,15 @@ class HomePage extends React.Component {
     };
 
     onStartButtonClick = () => {
-        let serviceUuid = document.querySelector("#service1").value;
-        if (serviceUuid.startsWith("0x")) {
-            serviceUuid = parseInt(serviceUuid);
-        }
+        let serviceUuid = "c66a79e7-25fa-4928-85ec-f287069060b8"; //document.querySelector("#service1").value;
+        // if (serviceUuid.startsWith("0x")) {
+        //     serviceUuid = parseInt(serviceUuid);
+        // }
 
-        let characteristicUuid = document.querySelector("#characteristic").value;
-        if (characteristicUuid.startsWith("0x")) {
-            characteristicUuid = parseInt(characteristicUuid);
-        }
+        let characteristicUuid = "0x32c0"; //document.querySelector("#characteristic").value;
+        // if (characteristicUuid.startsWith("0x")) {
+        //     characteristicUuid = parseInt(characteristicUuid);
+        // }
 
         console.log("Requesting Bluetooth Device...");
         navigator.bluetooth
@@ -136,7 +136,7 @@ class HomePage extends React.Component {
                     subTitle="Manage your Ring"
                     extra={[
                         <Link to="/settings">
-                            <Button type="primary">My Contacts</Button>
+                            <Button type="primary">Settings</Button>
                         </Link>,
 
                         <Button danger type="primary" onClick={this.sendAlert}>
@@ -150,39 +150,16 @@ class HomePage extends React.Component {
 
                 <div class="container" id="header-container"></div>
                 <div class="container" id="content-container">
-                    <div
-                        style={{
-                            border: "blue",
-                            padding: "50px",
-                            margin: "100px",
-                        }}
+                    <Button
+                        id="startNotifications"
+                        onClick={this.onStartButtonClick}
+                        type="Button"
                     >
-                        <form>
-                            <input
-                                id="service1"
-                                type="text"
-                                list="services"
-                                autofocus=""
-                                placeholder="Bluetooth Service"
-                            />
-                            <input
-                                id="characteristic"
-                                type="text"
-                                list="characteristics"
-                                placeholder="Bluetooth Characteristic"
-                            />
-                        </form>
-                        <Button
-                            id="startNotifications"
-                            onClick={this.onStartButtonClick}
-                            type="Button"
-                        >
-                            Start notifications
-                        </Button>
-                        <Button id="stopNotifications" class="Button">
-                            Stop notifications
-                        </Button>
-                    </div>
+                        Connect to your Ring
+                    </Button>
+                    <Button id="stopNotifications" class="Button">
+                        Stop notifications
+                    </Button>
                 </div>
             </div>
         );
