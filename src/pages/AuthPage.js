@@ -24,7 +24,11 @@ const AuthForm = () => {
         console.log("Success:", values);
         fetch(AUTH_URL, { mode: "cors", body: values, method: "POST" })
             .then((res) => res.json())
-            .then((data) => {localStorage.setItem("auth_token", data.token); //navigate to homepage});
+            .then((data) => {
+                localStorage.setItem("auth_token", data.token);
+                //navigate to homepage});
+                console.log("yee");
+            });
     };
 
     const onFinishFailed = (errorInfo) => {
