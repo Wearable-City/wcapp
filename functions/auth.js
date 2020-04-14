@@ -12,7 +12,7 @@ exports.handler = (event, context, callback) => {
     let sentPassword = data.userName;
     console.log(data.password);
     return client
-        .query(q.Paginate(q.Match(q.Index("users_by_username"), event.body.userName)))
+        .query(q.Paginate(q.Match(q.Index("users_by_username"), data.userName)))
         .then((response) => {
             const userRefs = response.data;
             console.log("User refs", userRefs);
