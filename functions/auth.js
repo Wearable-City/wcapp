@@ -35,7 +35,7 @@ exports.handler = (event, context, callback) => {
                     console.log(ret[0]);
                     return callback(null, {
                         statusCode: 200,
-                        body: { token: `${Date.now().toString()}` },
+                        body: JSON.stringify({ token: `${Date.now().toString()}` }),
                     });
                 } else {
                     console.log("bad password");
