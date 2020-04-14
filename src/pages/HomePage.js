@@ -25,12 +25,14 @@ class HomePage extends React.Component {
         // TODO: if we get an alert notification from the ring, we should hit our alert API endpoint here.
         let dec = new TextDecoder();
         console.log(dec.decode(value));
-        if (dec.decode(value) === 1) {
+        console.log(dec.decode(value) + " and my type is " + typeof dec.decode(value))
+        if (dec.decode(value) === "1") {
             this.sendAlert();
         }
     };
 
     sendAlert = () => {
+        console.log("alert sent");
         fetch('https://wearablecity.netlify.com/.netlify/functions/alert-contacts?ringid=42069', {
             method: "GET",
         }).catch((err) => {
