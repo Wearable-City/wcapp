@@ -1,11 +1,8 @@
 import React from "react";
 import { Button } from "antd";
 import { Link } from "react-router-dom";
-import { Card, Avatar } from 'antd';
-import { EditOutlined, ContactsOutlined, SettingOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 
-const { Meta } = Card;
 //future use
 
 class HomePage extends React.Component {
@@ -13,7 +10,6 @@ class HomePage extends React.Component {
 
     handleNotifications = (event) => {
         let value = event.target.value;
-        let a = [];
         // Convert raw data bytes to hex values just for the sake of showing something.
         // In the "real" world, you'd use data.getUint8, data.getUint16 or even
         // TextDecoder to process raw data bytes.
@@ -25,7 +21,7 @@ class HomePage extends React.Component {
         // TODO: if we get an alert notification from the ring, we should hit our alert API endpoint here.
         let dec = new TextDecoder();
         console.log(dec.decode(value));
-        console.log(dec.decode(value) + " and my type is " + typeof dec.decode(value))
+        console.log(dec.decode(value) + " and my type is " + typeof dec.decode(value));
         if (dec.decode(value) === "1") {
             this.sendAlert();
         }
@@ -33,9 +29,12 @@ class HomePage extends React.Component {
 
     sendAlert = () => {
         console.log("alert sent");
-        fetch('https://wearablecity.netlify.com/.netlify/functions/alert-contacts?ringid=42069', {
-            method: "GET",
-        }).catch((err) => {
+        fetch(
+            "https://wearablecity.netlify.com/.netlify/functions/alert-contacts?ringid=42069",
+            {
+                method: "GET",
+            }
+        ).catch((err) => {
             console.log(err);
         });
     };
@@ -126,9 +125,10 @@ class HomePage extends React.Component {
                 </Card> */}
                 <Link to="/settings">
                     <Button type="primary">My Contacts</Button>
-
                 </Link>
-                <Button danger type="primary" onClick={this.sendAlert}>Send Alert</Button>
+                <Button danger type="primary" onClick={this.sendAlert}>
+                    Send Alert
+                </Button>
                 <div class="container" id="header-container"></div>
                 <div class="container" id="content-container">
                     <div

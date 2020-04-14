@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import "antd/dist/antd.css";
 import {
     Table,
@@ -20,17 +20,26 @@ import {
     RightOutlined,
 } from "@ant-design/icons";
 
-
 const { Title } = Typography;
 const { TextArea } = Input;
 
-const UPDATE_URL = new URL("https://wearablecity.netlify.com/.netlify/functions/users-edit-data");
+const UPDATE_URL = new URL(
+    "https://wearablecity.netlify.com/.netlify/functions/users-edit-data"
+);
 
-const deleteNotification = (id) => { message.warning(id + " has been deleted"); };
-const saveSuccessNotification = () => { message.success("Data has been saved!"); };
-const saveFailedNotification = (err) => { message.error("Saving data failed 😞 Please try again!"); console.error(err); };
-const editNotification = () => { message.warning("Contact has been updated"); };
-const createNotification = (id) => { message.success(id + " has been added"); };
+const saveSuccessNotification = () => {
+    message.success("Data has been saved!");
+};
+const saveFailedNotification = (err) => {
+    message.error("Saving data failed 😞 Please try again!");
+    console.error(err);
+};
+const editNotification = () => {
+    message.warning("Contact has been updated");
+};
+const createNotification = (id) => {
+    message.success(id + " has been added");
+};
 
 class ContactList extends React.Component {
     constructor(props) {
@@ -58,38 +67,39 @@ class ContactList extends React.Component {
             {
                 title: "Contact First Name",
                 dataIndex: "firstName",
-                key: "id" + "firstName",
+                key: `idfirstName`,
                 editable: true,
             },
 
             {
                 title: "Contact Last Name",
                 dataIndex: "lastName",
-                key: "id" + "lastName",
+                key: `idlastName`,
                 editable: true,
             },
             {
                 title: "Contact Phone Number",
                 dataIndex: "phoneNumber",
-                key: "id" + "phoneNumber",
+                key: `idphoneNumber`,
                 editable: true,
             },
             {
                 title: "Alert Message",
                 dataIndex: "alertMessage",
-                key: "id" + "alertMessage",
+                key: `idalertMessage`,
                 editable: true,
             },
             {
                 title: "",
                 dataIndex: "operation",
-                render: (text, record, index) => (
-
-                    <Button type="link" onClick={() => this.toggleEditModal(true, record)}>
+                render: (text, record) => (
+                    <Button
+                        type="link"
+                        onClick={() => this.toggleEditModal(true, record)}
+                    >
                         Edit
                     </Button>
-
-                )
+                ),
             },
             {
                 title: "",
@@ -113,7 +123,9 @@ class ContactList extends React.Component {
                             });
                         }}
                     >
-                        <Button type="link" danger>Delete</Button>
+                        <Button type="link" danger>
+                            Delete
+                        </Button>
                     </Popconfirm>
                 ),
             },
@@ -126,29 +138,27 @@ class ContactList extends React.Component {
     }
     onEditSubmit = (id, fn, ln, pn, am) => {
         let contacts = this.state.user.contacts;
-        console.log(contacts)
+        console.log(contacts);
 
         for (var i = 0; i < contacts.length; i++) {
             var contact = contacts[i];
-            if (contact.id == id) {
-
+            if (contact.id === id) {
                 contact.firstName = fn;
                 contact.lastName = ln;
                 contact.phoneNumber = pn;
                 contact.alertMessage = am;
-                console.log(contact)
+                console.log(contact);
             }
         }
 
         this.setState({
             user: {
-                contacts: contacts
+                contacts: contacts,
             },
-            showEditModal: false
+            showEditModal: false,
         });
 
         editNotification();
-
     };
 
     toggleAddModal = () => {
@@ -251,7 +261,6 @@ class ContactList extends React.Component {
     };
 
     render() {
-
         return (
             <div>
                 <Title level={2} style={{ textAlign: "center", padding: "1em" }}>
@@ -292,7 +301,7 @@ class ContactList extends React.Component {
                             style={{ float: "left", marginLeft: "4em" }}
                         >
                             Delete All
-                    </Button>
+                        </Button>
                     </Popconfirm>
                 </div>
 
@@ -421,14 +430,25 @@ class ContactList extends React.Component {
                         title={"Editting Emergency Contact"}
                         onCancel={() => this.toggleEditModal(false)}
                         footer={[
-                            <Button key="back" onClick={() => this.toggleEditModal(false)}>
+                            <Button
+                                key="back"
+                                onClick={() => this.toggleEditModal(false)}
+                            >
                                 Cancel
                             </Button>,
                             <Button
                                 key="submit"
                                 type="primary"
                                 loading={this.state.modalIsLoading}
-                                onClick={() => this.onEditSubmit(this.state.id, this.state.firstName, this.state.lastName, this.state.phoneNumber, this.state.alertMessage)}
+                                onClick={() =>
+                                    this.onEditSubmit(
+                                        this.state.id,
+                                        this.state.firstName,
+                                        this.state.lastName,
+                                        this.state.phoneNumber,
+                                        this.state.alertMessage
+                                    )
+                                }
                             >
                                 Submit
                             </Button>,
