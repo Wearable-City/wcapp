@@ -28,7 +28,7 @@ exports.handler = (event, context, callback) => {
                     console.log("bad usr name");
                     return callback(null, {
                         statusCode: 400,
-                        body: { error: "Invalid username" },
+                        body: JSON.stringify({ error: "Invalid username" }),
                         headers: { "Access-Control-Allow-Origin": "*" },
                     });
                 }
@@ -43,9 +43,9 @@ exports.handler = (event, context, callback) => {
                     console.log("bad password");
                     return callback(null, {
                         statusCode: 401,
-                        body: {
+                        body: JSON.stringify({
                             error: "Invalid password",
-                        },
+                        }),
                         headers: { "Access-Control-Allow-Origin": "*" },
                     });
                 }
@@ -56,6 +56,7 @@ exports.handler = (event, context, callback) => {
             return callback(null, {
                 statusCode: 400,
                 body: JSON.stringify(error),
+                headers: { "Access-Control-Allow-Origin": "*" },
             });
         });
 };
