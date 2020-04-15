@@ -46,7 +46,8 @@ class HomePage extends React.Component {
             {
                 method: "GET",
             }
-        ).then(message.warning("ALERT HAS BEEN SENT! 🚨"))
+        )
+            .then(message.warning("ALERT HAS BEEN SENT! 🚨"))
             .catch((err) => {
                 console.log(err);
             });
@@ -60,9 +61,7 @@ class HomePage extends React.Component {
         // }
 
         let characteristicUuid = "0x32c0"; //document.querySelector("#characteristic").value;
-        // if (characteristicUuid.startsWith("0x")) {
-        //     characteristicUuid = parseInt(characteristicUuid);
-        // }
+        characteristicUuid = parseInt(characteristicUuid);
 
         console.log("Requesting Bluetooth Device...");
         navigator.bluetooth
