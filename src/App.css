@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+body {
+  background:white;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -28,6 +32,10 @@
   color: #61dafb;
 }
 
+.animate {
+  animation: float;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -40,4 +48,20 @@
 .site-card-wrapper {
   background: #ececec;
   padding: 30px;
+}
+
+@keyframes float {
+
+	0% {
+		box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6);
+		transform: translatey(0px);
+	}
+	50% {
+		box-shadow: 0 25px 15px 0px rgba(0,0,0,0.2);
+		transform: translatey(-20px);
+	}
+	100% {
+		box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6);
+		transform: translatey(0px);
+	}
 }
