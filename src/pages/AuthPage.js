@@ -1,8 +1,7 @@
 import React from "react";
 import { Form, Input, Button, PageHeader, message } from "antd";
 import "../styles/login.css";
-import { Card, Avatar } from 'antd';
-
+import { Card, Avatar } from "antd";
 
 const { Meta } = Card;
 
@@ -21,7 +20,7 @@ const tailLayout = {
     },
 };
 
-const AUTH_URL = "https://wearablecity.netlify.com/.netlify/functions/auth";
+const AUTH_URL = "https://wearablecity.netlify.app/.netlify/functions/auth";
 
 const AuthPage = (props) => {
     const onFinish = (values) => {
@@ -50,13 +49,13 @@ const AuthPage = (props) => {
     };
 
     let style = {
-        animationName: 'float',
+        animationName: "float",
         animationDuration: "10s",
-        animationDelay: '0.0s',
+        animationDelay: "0.0s",
         animationIterationCount: 10000000,
 
         width: 325,
-        marginTop: "4%"
+        marginTop: "4%",
     };
 
     return (
@@ -70,9 +69,7 @@ const AuthPage = (props) => {
                     justifyItems: "center",
                 }}
             >
-
                 <Card
-
                     style={style}
                     cover={
                         <img
@@ -80,15 +77,16 @@ const AuthPage = (props) => {
                             src="https://png.pngtree.com/thumb_back/fh260/back_our/20190625/ourmid/pngtree-blue-technology-cyber-security-poster-image_261494.jpg"
                         />
                     }
-                ><Form
-                    {...layout}
-                    name="basic"
-                    initialValues={{
-                        remember: true,
-                    }}
-                    onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
                 >
+                    <Form
+                        {...layout}
+                        name="basic"
+                        initialValues={{
+                            remember: true,
+                        }}
+                        onFinish={onFinish}
+                        onFinishFailed={onFinishFailed}
+                    >
                         <Meta
                             style={{ marginTop: "4%" }}
                             title="Login"
@@ -121,15 +119,20 @@ const AuthPage = (props) => {
                             <Input.Password />
                         </Form.Item>
 
-                        <Form.Item {...tailLayout} style={{ marginTop: "9%", float: "right", marginRight: "10%" }}>
+                        <Form.Item
+                            {...tailLayout}
+                            style={{
+                                marginTop: "9%",
+                                float: "right",
+                                marginRight: "10%",
+                            }}
+                        >
                             <Button type="primary" htmlType="submit">
                                 Submit
-                    </Button>
+                            </Button>
                         </Form.Item>
                     </Form>
-
                 </Card>
-
             </div>
         </div>
     );

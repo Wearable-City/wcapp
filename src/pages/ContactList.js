@@ -26,7 +26,7 @@ const { Title } = Typography;
 const { TextArea } = Input;
 
 const UPDATE_URL = new URL(
-    "https://wearablecity.netlify.com/.netlify/functions/users-edit-data"
+    "https://wearablecity.netlify.app/.netlify/functions/users-edit-data"
 );
 
 const saveSuccessNotification = () => {
@@ -220,7 +220,7 @@ class ContactList extends React.Component {
 
     fetchData = () => {
         fetch(
-            "https://wearablecity.netlify.com/.netlify/functions/users-read-by-ringid?ringid=42069",
+            "https://wearablecity.netlify.app/.netlify/functions/users-read-by-ringid?ringid=42069",
             { mode: "cors" }
         )
             .then((response) => response.json())
