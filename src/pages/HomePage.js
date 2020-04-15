@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import "antd/dist/antd.css";
 import "../App.css";
 
-import { Card, Avatar } from "antd";
-import { ApiTwoTone, ExclamationCircleTwoTone } from "@ant-design/icons";
+import { Card, message } from "antd";
+import { ApiTwoTone } from "@ant-design/icons";
 
 const { Meta } = Card;
 
@@ -41,15 +41,15 @@ class HomePage extends React.Component {
     };
 
     sendAlert = () => {
-        console.log("alert sent");
         fetch(
             "https://wearablecity.netlify.app/.netlify/functions/alert-contacts?ringid=42069",
             {
                 method: "GET",
             }
-        ).catch((err) => {
-            console.log(err);
-        });
+        ).then(message.warning("ALERT HAS BEEN SENT! 🚨"))
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     onStartButtonClick = () => {
@@ -80,11 +80,12 @@ class HomePage extends React.Component {
                 return service.getCharacteristic(characteristicUuid);
             })
             .then((characteristic) => {
+                message.success("Ring has connected successfully!");
                 this.myCharacteristic = characteristic;
                 this.setState({
                     color: "#52c41a",
                     connected: true,
-                    message: "Ring is connected",
+                    message: "Ring is functional",
                 });
                 return this.myCharacteristic.startNotifications().then((_) => {
                     console.log("> Notifications started");
@@ -161,7 +162,7 @@ class HomePage extends React.Component {
                     }}
                 >
                     <div class="container" id="content-container"></div>
-                    <div style={{ marginTop: "5%" }}>
+                    <div style={{ marginTop: "4%" }}>
                         <Card
                             cover={
                                 <img
@@ -170,7 +171,7 @@ class HomePage extends React.Component {
                                 />
                             }
                             hoverable
-                            style={{ width: 500 }}
+                            style={{ width: 325 }}
                             actions={[
                                 <ApiTwoTone
                                     twoToneColor={this.state.color}
