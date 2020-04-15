@@ -282,8 +282,8 @@ class ContactList extends React.Component {
                     <PageHeader
                         className="site-page-header"
                         onBack={this.onBackPressed}
-                        title="Settings"
-                        subTitle="Edit your contacts and more."
+                        title="My Contacts"
+                        subTitle="Manage your contacts"
                         extra={[
                             <Button key="3" onClick={this.onLogout}>
                                 Logout

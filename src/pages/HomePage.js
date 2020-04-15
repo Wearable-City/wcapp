@@ -2,11 +2,25 @@ import React from "react";
 import { Button, PageHeader } from "antd";
 import { Link } from "react-router-dom";
 import "antd/dist/antd.css";
+import "../App.css";
 
-//future use
+import { Card, Avatar } from 'antd';
+import { ApiTwoTone, ExclamationCircleTwoTone } from '@ant-design/icons';
+
+const { Meta } = Card;
 
 class HomePage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            color: "#FF4D4F", //FF4D4F red 52c41a green 1790FF blue
+            connected: false,
+            message: "Please connect to your ring device"
+        }
+    }
+
     myCharacteristic;
+
 
     handleNotifications = (event) => {
         let value = event.target.value;
@@ -40,6 +54,7 @@ class HomePage extends React.Component {
     };
 
     onStartButtonClick = () => {
+        this.setState({ color: "#1790FF" })
         let serviceUuid = "c66a79e7-25fa-4928-85ec-f287069060b8"; //document.querySelector("#service1").value;
         // if (serviceUuid.startsWith("0x")) {
         //     serviceUuid = parseInt(serviceUuid);
@@ -67,6 +82,7 @@ class HomePage extends React.Component {
             })
             .then((characteristic) => {
                 this.myCharacteristic = characteristic;
+                this.setState({ color: "#52c41a", connected: true, message: "Ring is connected" });
                 return this.myCharacteristic.startNotifications().then((_) => {
                     console.log("> Notifications started");
                     this.myCharacteristic.addEventListener(
@@ -77,6 +93,7 @@ class HomePage extends React.Component {
             })
             .catch((error) => {
                 console.log("Argh! " + error);
+                this.setState({ color: "#FF4D4F" })
             });
         return false;
     };
@@ -91,6 +108,7 @@ class HomePage extends React.Component {
                         "characteristicvaluechanged",
                         this.handleNotifications
                     );
+                    this.setState({ color: "#FF4D4F", connected: false, message: "Please connect to your ring device" })
                 })
                 .catch((error) => {
                     console.log("Argh! " + error);
@@ -108,35 +126,15 @@ class HomePage extends React.Component {
     render() {
         return (
             <div>
-                {/* <Card
-                    style={{ width: 300 }}
-                    cover={
-                        <img
-                            alt="example"
-                            src="https://www.gatech.edu/sites/default/files/uploads/images/superblock_images/tower.png"
-                        />
-                    }
-                    actions={[
-                        <SettingOutlined key="setting" />,
-                        <EditOutlined key="edit" />,
-                        <Link to="/settings">
-                            <ContactsOutlined key="contacts" />
-                        </Link>,
-                    ]}
-                >
-                    <Meta
-                        avatar={<Avatar src="https://www.pinclipart.com/picdir/big/157-1578752_wi-fi-computer-icons-hotspot-wireless-signal-transparent.png" />}
-                        title="Ring Alert"
-                        description="This is the description"
-                    />
-                </Card> */}
+
                 <PageHeader
                     className="site-page-header"
                     title="Home"
+                    color="white"
                     subTitle="Manage your Ring"
                     extra={[
                         <Link to="/settings">
-                            <Button type="primary">Settings</Button>
+                            <Button type="primary">My Contacts</Button>
                         </Link>,
 
                         <Button danger type="primary" onClick={this.sendAlert}>
@@ -148,18 +146,63 @@ class HomePage extends React.Component {
                     ]}
                 />
 
-                <div class="container" id="header-container"></div>
-                <div class="container" id="content-container">
-                    <Button
-                        id="startNotifications"
-                        onClick={this.onStartButtonClick}
-                        type="Button"
-                    >
-                        Connect to your Ring
-                    </Button>
-                    <Button id="stopNotifications" class="Button">
-                        Stop notifications
-                    </Button>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        justifyItems: "center",
+                    }}
+                >
+                    <div class="container" id="content-container">
+
+                    </div>
+                    <div style={{ marginTop: "5%" }}>
+                        <Card
+                            cover={
+                                <img
+                                    alt="example"
+                                    src="https://png.pngtree.com/thumb_back/fh260/back_our/20190625/ourmid/pngtree-blue-technology-cyber-security-poster-image_261494.jpg"
+                                />}
+                            hoverable
+                            style={{ width: 500 }}
+
+
+                            actions={[
+
+
+                                <ApiTwoTone twoToneColor={this.state.color} id="startNotifications"
+                                    onClick={() => {
+                                        if (this.state.connected) {
+                                            this.onStopButtonClick()
+                                        } else {
+                                            this.onStartButtonClick()
+                                        }
+                                    }}
+
+                                    key="connect" />
+
+
+
+                            ]}
+                        >
+                            <Meta
+
+                                title="Ring Alert"
+                                description={this.state.message}
+                            />
+                            {/* <Button
+                                id="startNotifications"
+                                onClick={this.onStartButtonClick}
+                                type="Button"
+                            >
+                                Connect to your Ring
+                    </Button> */}
+                            {/* <Button id="stopNotifications" class="Button">
+                                Stop notifications
+                    </Button> */}
+                        </Card>
+                    </div>
                 </div>
             </div>
         );
