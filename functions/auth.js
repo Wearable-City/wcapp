@@ -7,7 +7,7 @@ const client = new faunadb.Client({
 });
 
 exports.handler = (event, context, callback) => {
-    console.log("Function `auth` invoked", util.inspect(event.body));
+    console.log("Function `auth` invoked", util.inspect(event));
     let data = JSON.parse(event.body);
     console.log(data.userName);
     let sentPassword = data.password;
