@@ -1,5 +1,6 @@
 /* code from functions/todos-create.js */
 const faunadb = require("faunadb"); /* Import faunaDB sdk */
+const util = require("util");
 
 /* configure faunaDB Client with our secret */
 const q = faunadb.query;
@@ -10,6 +11,7 @@ const client = new faunadb.Client({
 /* export our lambda function as named "handler" export */
 exports.handler = (event, context, callback) => {
     /* parse the string body into a useable JS object */
+    console.log("Function `users-edit-data` invoked", util.inspect(event));
     let data = JSON.parse(event.body);
     console.log("Function `users-edit-data` invoked", data);
     /* construct the fauna query */
