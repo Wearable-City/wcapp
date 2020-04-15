@@ -1,4 +1,5 @@
 const faunadb = require("faunadb");
+const util = require("util");
 
 const q = faunadb.query;
 const client = new faunadb.Client({
@@ -6,7 +7,7 @@ const client = new faunadb.Client({
 });
 
 exports.handler = (event, context, callback) => {
-    console.log("Function `auth` invoked");
+    console.log("Function `auth` invoked", util.inspect(event.body));
     let data = JSON.parse(event.body);
     console.log(data.userName);
     let sentPassword = data.password;
