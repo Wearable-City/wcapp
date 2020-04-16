@@ -25,7 +25,9 @@ class HomePage extends React.Component {
 
     getLocation = () => {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(this.showPosition);
+            navigator.geolocation.getCurrentPosition(this.showPosition, () =>
+                message.error("Location services failed 😞 Try again!")
+            );
             console.log(this.state.location);
         } else {
             this.setState({ location: "Location was not supported" });
