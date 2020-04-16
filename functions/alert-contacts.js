@@ -1,4 +1,5 @@
 const faunadb = require("faunadb");
+const util = require("util");
 
 const q = faunadb.query;
 const client = new faunadb.Client({
@@ -15,6 +16,7 @@ const TEST_NUM = "+14044287664";
  * @param {Array<Object>} contacts
  */
 function textContacts(contacts, location) {
+    console.log(util.inspect(location));
     contacts.forEach((e) => {
         twilioClient.messages
             .create({
