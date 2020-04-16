@@ -5,8 +5,7 @@ import "antd/dist/antd.css";
 import "../App.css";
 
 import { Card, message } from "antd";
-import { ApiTwoTone } from "@ant-design/icons";
-
+import { ApiTwoTone, CompassFilled } from "@ant-design/icons";
 const { Meta } = Card;
 
 class HomePage extends React.Component {
@@ -16,8 +15,33 @@ class HomePage extends React.Component {
             color: "#FF4D4F", //FF4D4F red 52c41a green 1790FF blue
             connected: false,
             message: "Please connect to your ring device",
+            location: {},
         };
     }
+
+    componentDidMount = () => {
+        this.getLocation();
+    };
+
+    getLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(this.showPosition, () =>
+                message.error("Location services failed 😞 Try again!")
+            );
+            console.log(this.state.location);
+        } else {
+            this.setState({ location: "Location was not supported" });
+        }
+    };
+
+    showPosition = (position) => {
+        this.setState({
+            location: {
+                lat: position.coords.latitude,
+                long: position.coords.longitude,
+            },
+        });
+    };
 
     myCharacteristic;
 
@@ -42,7 +66,7 @@ class HomePage extends React.Component {
 
     sendAlert = () => {
         fetch(
-            "https://wearablecity.netlify.app/.netlify/functions/alert-contacts?ringid=42069",
+            `https://wearablecity.netlify.app/.netlify/functions/alert-contacts?ringid=42069&lat=${this.state.location.lat}&long=${this.state.location.long}`,
             {
                 method: "GET",
             }
@@ -183,6 +207,11 @@ class HomePage extends React.Component {
                                         }
                                     }}
                                     key="connect"
+                                />,
+                                <CompassFilled
+                                    id="startLocation"
+                                    onClick={this.getLocation}
+                                    key="location"
                                 />,
                             ]}
                         >
