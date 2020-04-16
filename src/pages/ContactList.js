@@ -151,15 +151,16 @@ class ContactList extends React.Component {
         } else {
             this.setState({ location: "Location was not supported" });
         }
-    }
+    };
 
     showPosition = (position) => {
         this.setState({
-            location: "       ||  Latitude: " + position.coords.latitude +
-                "Longitude: " + position.coords.longitude
-        })
-    }
-
+            location: {
+                lat: position.coords.latitude,
+                long: position.coords.longitude,
+            },
+        });
+    };
 
     onEditSubmit = (id, fn, ln, pn, am) => {
         let contacts = this.state.user.contacts;
@@ -359,7 +360,7 @@ class ContactList extends React.Component {
                             style={{ float: "left", marginLeft: "4em" }}
                         >
                             Geo
-                            </Button>
+                        </Button>
                     </div>
                     <div>
                         <Modal
