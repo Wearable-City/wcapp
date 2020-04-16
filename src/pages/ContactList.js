@@ -64,6 +64,7 @@ class ContactList extends React.Component {
             loggedOut: false,
             //End of Add Contact Stuff
 
+            location: "",
             loaded: false,
         };
 
@@ -139,7 +140,27 @@ class ContactList extends React.Component {
         this.onAdd = this.onAdd.bind(this);
         this.onChangeString = this.onChangeString.bind(this);
         this.toggleEditModal = this.toggleEditModal.bind(this);
+        this.getLocation = this.getLocation.bind(this);
+        this.showPosition = this.showPosition.bind(this);
     }
+
+    getLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(this.showPosition);
+            console.log(this.state.location);
+        } else {
+            this.setState({ location: "Location was not supported" });
+        }
+    }
+
+    showPosition = (position) => {
+        this.setState({
+            location: "       ||  Latitude: " + position.coords.latitude +
+                "Longitude: " + position.coords.longitude
+        })
+    }
+
+
     onEditSubmit = (id, fn, ln, pn, am) => {
         let contacts = this.state.user.contacts;
         console.log(contacts);
@@ -276,6 +297,7 @@ class ContactList extends React.Component {
     };
 
     render() {
+        this.getLocation();
         if (!this.state.goingBack) {
             return (
                 <div>
@@ -330,6 +352,14 @@ class ContactList extends React.Component {
                                 Delete All
                             </Button>
                         </Popconfirm>
+                        <Button
+                            danger
+                            type="secondary"
+                            onClick={this.getLocation}
+                            style={{ float: "left", marginLeft: "4em" }}
+                        >
+                            Geo
+                            </Button>
                     </div>
                     <div>
                         <Modal
