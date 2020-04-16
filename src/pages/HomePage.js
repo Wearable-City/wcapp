@@ -5,7 +5,7 @@ import "antd/dist/antd.css";
 import "../App.css";
 
 import { Card, message } from "antd";
-import { ApiTwoTone, CompassFilled } from "@ant-design/icons";
+import { ApiTwoTone, CompassTwoTone } from "@ant-design/icons";
 const { Meta } = Card;
 
 class HomePage extends React.Component {
@@ -13,6 +13,7 @@ class HomePage extends React.Component {
         super(props);
         this.state = {
             color: "#FF4D4F", //FF4D4F red 52c41a green 1790FF blue
+            color2: "#898989",
             connected: false,
             message: "Please connect to your ring device",
             location: {},
@@ -31,6 +32,7 @@ class HomePage extends React.Component {
 
             console.log(this.state.location);
             if (Object.entries(this.state.location).length > 0) {
+                this.setState({ color2: "#1790FF" })
                 message.success("Location services shared!");
             }
         } else {
@@ -213,10 +215,11 @@ class HomePage extends React.Component {
                                     }}
                                     key="connect"
                                 />,
-                                <CompassFilled
+                                <CompassTwoTone
                                     id="startLocation"
                                     onClick={this.getLocation}
                                     key="location"
+                                    twoToneColor={this.state.color2}
                                 />,
                             ]}
                         >
