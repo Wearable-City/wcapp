@@ -353,14 +353,6 @@ class ContactList extends React.Component {
                                 Delete All
                             </Button>
                         </Popconfirm>
-                        <Button
-                            danger
-                            type="secondary"
-                            onClick={this.getLocation}
-                            style={{ float: "left", marginLeft: "4em" }}
-                        >
-                            Geo
-                        </Button>
                     </div>
                     <div>
                         <Modal

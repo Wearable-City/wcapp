@@ -28,6 +28,7 @@ class HomePage extends React.Component {
             navigator.geolocation.getCurrentPosition(this.showPosition, () =>
                 message.error("Location services failed 😞 Try again!")
             );
+            message.success("Location services shared!");
             console.log(this.state.location);
         } else {
             this.setState({ location: "Location was not supported" });
