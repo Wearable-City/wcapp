@@ -20,7 +20,7 @@ function textContacts(contacts, location) {
     contacts.forEach((e) => {
         twilioClient.messages
             .create({
-                body: `${e.alertMessage} \n \n My Location: ${JSON.stringify(location)}: \n http://maps.google.com/maps?q=${location.long},${location.lat}`, // http://maps.google.com/maps?q=24.197611,120.780512
+                body: `${e.alertMessage} \n \n Location: ${JSON.stringify(location)}: \n http://maps.google.com/maps?q=${location.long},${location.lat}`, // http://maps.google.com/maps?q=24.197611,120.780512
                 from: TWILIO_PHONE_NUM,
                 to: e.phoneNumber,
             })
